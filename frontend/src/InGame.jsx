@@ -1,3 +1,5 @@
+import './InGame.css'
+
 function InGame({HandleBack}) {
     const size = 7;
 
@@ -10,7 +12,7 @@ function InGame({HandleBack}) {
                     const arr = [];
                     for (let x=0; x<size;x++)
                     {
-                        arr.push(<button key = {size*y+x}/>);
+                        arr.push(<button key = {size*y+x} className = "gameBoard"/>);
                     }
                     total.push(
                         <div>
