@@ -1,30 +1,24 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import InGame from './InGame'
+import Lobby from './Lobby'
 import './App.css'
 
 function App() {
-    const size = 7;
+    const [inGame,setInGame] = useState(false);
+
+    const HandleHost = () => {
+        setInGame(true)
+    }
+
+    const HandleBack = () => {
+        setInGame(false)
+    }
 
     return (
         <>
-            {(() => {
-                const total = [];
-                for (let y=0;y<size;y++)
-                {
-                    const arr = [];
-                    for (let x=0; x<size;x++)
-                    {
-                        arr.push(<button key = {size*y+x}/>);
-                    }
-                    total.push(
-                        <div>
-                            {arr}
-                        </div>
-                    );
-                }
-                return total;
-            })()}
+            {inGame ?
+                <InGame HandleBack = {HandleBack}/>:
+                <Lobby HandleHost = {HandleHost}/> }
         </>
     )
 }
