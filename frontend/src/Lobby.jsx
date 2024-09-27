@@ -12,6 +12,10 @@ function Lobby({HandleHost}) {
             <div id = "HostDiv">
                 <button onClick={HandleHost}>Host Game</button>
             </div>
+            <div>
+                <button className = "AccountButton">Sign Up</button>
+                <button className = "AccountButton">Login in</button>
+            </div>
         </>
     )
 }
