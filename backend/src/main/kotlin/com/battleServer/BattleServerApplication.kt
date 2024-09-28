@@ -30,6 +30,15 @@ class BattleServerApplication {
 	}
 }
 
+fun submitShipPlacement(placement: bool[][]){
+
+}
+
+fun fireMissile(game: Game, x: int, y: int){
+	if(x >= 7 || y >= 7){
+		// some error handling
+	}
+}
 
 fun getRandomString(length: Int) : String {
 	val allowedChars = ('A'..'Z') + ('a'..'z') + ('0'..'9')
