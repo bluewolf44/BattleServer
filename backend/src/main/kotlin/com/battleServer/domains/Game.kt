@@ -2,8 +2,10 @@ package com.battleServer.domains
 
 data class Game(
     val lobbyCode:String,
-    val hostBoard:List<Int>,
-    val guestBoard:List<Int>,
+    val hostHits:List<Boolean>,
+    val hostShips:List<Boolean>,
+    val guestHits:List<Boolean>,
+    val guestBoard:List<Boolean>,
     val currentTurn:String?,
     val hostIP:String,
     val guestIP:String?,
