@@ -19,10 +19,19 @@ class BattleServerApplication {
 
 	@PostMapping("/createGame")
 	fun createGame(request: HttpServletRequest): Game {
-		return Game(getRandomString(16), listOf(1), listOf(1), "SetUp", request.remoteAddr, null, null, null)
+		val size = 7;
+		var i = 0;
+		var startingBoard = mutableListOf<Boolean>()
+		while(i < size*size) {
+			startingBoard.add(false)
+			i++;
+		}
 
+		return Game(getRandomString(16), startingBoard, startingBoard,startingBoard,startingBoard, "SetUp", request.remoteAddr, null, null, null)
 	}
 }
+
+
 fun getRandomString(length: Int) : String {
 	val allowedChars = ('A'..'Z') + ('a'..'z') + ('0'..'9')
 	return (1..length)
