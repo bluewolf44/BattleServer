@@ -2,21 +2,22 @@ import { useState } from 'react'
 import './InGame.css'
 
 function InGame({HandleBack}) {
-    const size = 7;
-    const [titleText,setTitleText] = useState("Waiting To Join")
+    const boardSize = 7;
+    const [titleText,setTitleText] = useState("Waiting for other player...")
     const [lobbyCode,setLobbyCode] = useState("")
 
     return (
         <>
             <h1>{titleText}</h1>
+            <h2>{"Lobby code: "+lobbyCode}</h2>
             {(() => {
                 const total = [];
-                for (let y=0;y<size;y++)
+                for (let y=0;y<boardSize;y++)
                 {
                     const arr = [];
-                    for (let x=0; x<size;x++)
+                    for (let x=0; x<boardSize;x++)
                     {
-                        arr.push(<button key = {size*y+x} className = "gameBoard"/>);
+                        arr.push(<button key = {boardSize*y+x} className = "gameBoard"/>);
                     }
                     total.push(
                         <div>
@@ -26,7 +27,6 @@ function InGame({HandleBack}) {
                 }
                 return total;
             })()}
-            <p>{"Lobby Code: "+lobbyCode}</p>
             <button onClick = {HandleBack}>Back</button>
         </>
     )
