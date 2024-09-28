@@ -5,6 +5,7 @@ import './App.css'
 
 function App() {
     const [inGame,setInGame] = useState(false);
+    const [lobbyCode,setLobbyCode] = useState("")
 
     const HandleHost = async () => {
         await fetch("http://localhost:8080/createGame", {
@@ -18,9 +19,9 @@ function App() {
             if (!res.ok) {
                 throw new Error('Failed to fetch properties');
             }
-            return res.json();
+            return res.text()
         }).then((data) => {
-            console.log(data)
+            setLobbyCode(data)
         })
 
 
@@ -34,7 +35,7 @@ function App() {
     return (
         <>
             {inGame ?
-                <InGame HandleBack = {HandleBack}/>:
+                <InGame HandleBack = {HandleBack} lobbyCode = {lobbyCode}/>:
                 <Lobby HandleHost = {HandleHost}/> }
         </>
     )
