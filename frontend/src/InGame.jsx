@@ -1,10 +1,9 @@
 import { useState } from 'react'
 import './InGame.css'
 
-function InGame({HandleBack}) {
+function InGame({HandleBack,lobbyCode}) {
     const boardSize = 7;
     const [titleText,setTitleText] = useState("Waiting for other player...")
-    const [lobbyCode,setLobbyCode] = useState("")
     const [currentPhase,setCurrentPhase] = useState("waiting")
 
     const handleOnClick = (id) => {
@@ -12,7 +11,6 @@ function InGame({HandleBack}) {
         {
             case "waiting":
         }
-
     }
 
     return (

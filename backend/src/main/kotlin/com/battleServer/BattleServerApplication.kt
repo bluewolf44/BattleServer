@@ -16,7 +16,7 @@ class BattleServerApplication {
 	fun helloWorld(): String = "Hello World"
 
 	@PostMapping("/createGame")
-	fun createGame(request: HttpServletRequest): Game {
+	fun createGame(request: HttpServletRequest): String {
 		val size = 7;
 		var i = 0;
 		var startingBoard = mutableListOf<Boolean>()
@@ -24,8 +24,9 @@ class BattleServerApplication {
 			startingBoard.add(false)
 			i++;
 		}
-
-		return Game(getRandomString(16), startingBoard, startingBoard,startingBoard,startingBoard, "SetUp", request.remoteAddr, null, null, null)
+		val lobbyCode = getRandomString(16)
+		Game(lobbyCode, startingBoard, startingBoard,startingBoard,startingBoard, "SetUp", request.remoteAddr, null, null, null)
+		return lobbyCode
 	}
 }
 
