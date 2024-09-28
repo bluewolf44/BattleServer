@@ -5,7 +5,8 @@ import './App.css'
 
 function App() {
     const [inGame,setInGame] = useState(false);
-    const [lobbyCode,setLobbyCode] = useState("")
+    const [lobbyCode,setLobbyCode] = useState("");
+    const [error,setError] = useState("")
 
     const HandleHost = async () => {
         await fetch("http://localhost:8080/createGame", {
@@ -22,14 +23,26 @@ function App() {
             return res.text()
         }).then((data) => {
             setLobbyCode(data)
+            setInGame(true)
         })
-
-
-        setInGame(true)
     }
 
-    const HandleBack = () => {
-        setInGame(false)
+    const HandleBack = async () => {
+        await fetch("http://localhost:8080/joinGame/"+lobbyCode, {
+            method:"POST",
+            headers: {
+                //"Content-Type": "application/json",
+            },
+            //credentials: "same-origin",
+        })
+        .then((res) => {
+            if (!res.ok) {
+                throw new Error('Failed to fetch properties');
+            }
+            return res.text()
+        }).then((data) => {
+            setInGame(false)
+        })
     }
 
     return (
