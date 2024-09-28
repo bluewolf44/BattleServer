@@ -5,6 +5,15 @@ function InGame({HandleBack}) {
     const size = 7;
     const [titleText,setTitleText] = useState("Waiting To Join")
     const [lobbyCode,setLobbyCode] = useState("")
+    const [currentPhase,setCurrentPhase] = useState("waiting")
+
+    const handleOnClick = (id) => {
+        switch(currentPhase)
+        {
+            case "waiting":
+        }
+
+    }
 
     return (
         <>
@@ -16,7 +25,7 @@ function InGame({HandleBack}) {
                     const arr = [];
                     for (let x=0; x<size;x++)
                     {
-                        arr.push(<button key = {size*y+x} className = "gameBoard"/>);
+                        arr.push(<button key = {size*y+x} onClick = {() => handleOnClick(size*y+x)} className = "gameBoard"/>);
                     }
                     total.push(
                         <div>
