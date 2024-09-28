@@ -1,3 +1,6 @@
+#LobbyDiv {
+    display:flex;
+}
 #ButtonsDiv {
     padding: 10px;
     display: grid;
@@ -9,6 +12,13 @@
     display: grid;
     justify-content: center;
     justify-items: center;
+}
+
+#AccountsDiv {
+    display: absolute;
+    position: fixed;
+    bottom: 10px;
+    right: 10px;
 }
 
 #JoinButton {
