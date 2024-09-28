@@ -5,13 +5,17 @@ import jakarta.servlet.http.HttpServletRequest
 import org.springframework.boot.runApplication
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
+import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+
+val GamesRunning = mutableListOf<Game>()
 
 @RestController
 @SpringBootApplication
 @CrossOrigin(origins = ["http://localhost:5173"])
 class BattleServerApplication {
+
 	@GetMapping("")
 	fun helloWorld(): String = "Hello World"
 
@@ -25,8 +29,24 @@ class BattleServerApplication {
 			i++;
 		}
 		val lobbyCode = getRandomString(16)
-		Game(lobbyCode, startingBoard, startingBoard,startingBoard,startingBoard, "SetUp", request.remoteAddr, null, null, null)
+		GamesRunning.add(Game(lobbyCode, startingBoard, null, startingBoard, null, "SetUp", request.remoteAddr, null, null, null))
 		return lobbyCode
+	}
+
+	@PostMapping("/joinGame/{lobbyCode}")
+	fun joinGame(@PathVariable lobbyCode: String,request: HttpServletRequest) : ResponseEntity<String>
+	{
+		for (game in GamesRunning)
+		{
+			if (game.lobbyCode == lobbyCode)
+			{
+				game.guestIP = request.remoteAddr
+				return ResponseEntity.status(HttpStatus.CREATED).body("Joined")
+			}
+		}
+
+		return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Game not Found")
+
 	}
 }
 
