@@ -4,17 +4,18 @@ function Lobby({HandleHost}) {
 
     return (
         <>
+            <div>
+                <button className = "AccountButton">Sign up</button>
+                <button className = "AccountButton">Log in</button>
+            </div>
             <h1>Welcome to BattleSever</h1>
-            <div>
-                <input type="text" placeholder="Lobby Code"/>
-                <button id = "JoinButton">Join Game</button>
-            </div>
-            <div id = "HostDiv">
+            <div id = "ButtonsDiv">
+                <div id = "JoinGameDiv">                    
+                    <input type="text" placeholder="Lobby Code"/>
+                    <button id = "JoinButton">Join Game</button>
+                </div>
+                <p>or</p>
                 <button onClick={HandleHost}>Host Game</button>
-            </div>
-            <div>
-                <button className = "AccountButton">Sign Up</button>
-                <button className = "AccountButton">Login in</button>
             </div>
         </>
     )

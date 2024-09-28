@@ -1,9 +1,18 @@
-#HostDiv {
+#ButtonsDiv {
     padding: 10px;
+    display: grid;
+    justify-content: center;
+    justify-items: center;
+}
+
+#JoinGameDiv {
+    display: grid;
+    justify-content: center;
+    justify-items: center;
 }
 
 #JoinButton {
-    margin-left: 10px;
+    margin-top: 10px;
 }
 
 .AccountButton {
