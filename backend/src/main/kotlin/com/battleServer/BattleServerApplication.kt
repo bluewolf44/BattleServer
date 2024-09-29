@@ -1,13 +1,15 @@
 package com.battleServer
 
 import com.battleServer.domains.Game
-import jakarta.servlet.http.HttpServletRequest
-import org.springframework.boot.runApplication
-
+import com.battleServer.domains.GameSocket
 import org.springframework.boot.autoconfigure.SpringBootApplication
+import org.springframework.boot.runApplication
 import org.springframework.http.HttpStatus
+import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter
+
 
 val GamesRunning = mutableListOf<Game>()
 
@@ -19,42 +21,50 @@ class BattleServerApplication {
 	@GetMapping("")
 	fun helloWorld(): String = "Hello World"
 
-	@PostMapping("/createGame")
-	fun createGame(request: HttpServletRequest): String {
+	@GetMapping("/createGame", produces = [MediaType.TEXT_EVENT_STREAM_VALUE])
+	fun createGame(): ResponseEntity<SseEmitter> {
 		val size = 7;
 		var i = 0;
-		var startingBoard = mutableListOf<Boolean>()
+		val startingBoard = mutableListOf<Boolean>()
 		while(i < size*size) {
 			startingBoard.add(false)
 			i++;
 		}
 		val lobbyCode = getRandomString(16)
-		GamesRunning.add(Game(lobbyCode, startingBoard, null, startingBoard, null, "SetUp", request.remoteAddr, null, null, null))
-		return lobbyCode
+		val game = Game(lobbyCode, startingBoard.toMutableList(), startingBoard.toMutableList(), startingBoard.toMutableList(), startingBoard.toMutableList(), "SetUp",  null, null,SseEmitter(),null)
+		GamesRunning.add(game)
+		game.hostEmitter.send(GameSocket(game.lobbyCode,game.currentPhase,game.hostShips,game.guestHits))
+
+		return ResponseEntity.status(HttpStatus.CREATED).body(game.hostEmitter)
 	}
 
-	@PostMapping("/joinGame/{lobbyCode}")
-	fun joinGame(@PathVariable lobbyCode: String,request: HttpServletRequest) : ResponseEntity<String>
+	@GetMapping("/joinGame/{lobbyCode}")
+	fun joinGame(@PathVariable lobbyCode: String) : ResponseEntity<SseEmitter>
 	{
 		for (game in GamesRunning)
 		{
 			if (game.lobbyCode == lobbyCode)
 			{
-				game.guestIP = request.remoteAddr
-				return ResponseEntity.status(HttpStatus.CREATED).body("Joined")
+				game.questEmitter = SseEmitter()
+				game.currentPhase = "ShipPlacing"
+				game.hostEmitter.send(GameSocket(game.lobbyCode,game.currentPhase,game.hostShips,game.guestHits))
+
+				return ResponseEntity.status(HttpStatus.CREATED)
+					.body(game.questEmitter)
 			}
 		}
-
-		return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Game not Found")
-
+		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null)
 	}
+
+
+
 }
 
-fun submitShipPlacement(placement: bool[][]){
+fun submitShipPlacement(placement: Array<Array<Boolean>>){
 
 }
 
-fun fireMissile(game: Game, x: int, y: int){
+fun fireMissile(game: Game, x: Int, y: Int){
 	if(x >= 7 || y >= 7){
 		// some error handling
 	}
