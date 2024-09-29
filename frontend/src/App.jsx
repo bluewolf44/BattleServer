@@ -40,6 +40,35 @@ function App() {
 
     }
 
+    const HandleJoin = async (lobbyCode) => {
+
+        const eventSource = new EventSource('http://localhost:8080/joinGame/'+lobbyCode);
+
+        eventSource.onopen = (event) => {
+            console.log("connection opened")
+        }
+
+        eventSource.onmessage = (event) => {
+            setData(JSON.parse(event.data))
+            console.log(data);
+        };
+
+        eventSource.onerror = (error) => {
+            //console.error('EventSource failed:', error.target.readyState);
+            console.log(event.target.readyState)
+                if (event.target.readyState === EventSource.CLOSED) {
+                  console.log('eventsource closed (' + event.target.readyState + ')')
+                }
+            eventSource.close();
+        };
+
+        setInGame(true)
+
+        return () => {
+            eventSource.close();
+        };
+    }
+
     const HandleBack = async () => {
         setInGame(false)
     }
@@ -48,7 +77,7 @@ function App() {
         <>
             {inGame ?
                 <InGame HandleBack = {HandleBack} data = {data}/>:
-                <Lobby HandleHost = {HandleHost}/> }
+                <Lobby HandleHost = {HandleHost} HandleJoin = {HandleJoin}/> }
         </>
     )
 }

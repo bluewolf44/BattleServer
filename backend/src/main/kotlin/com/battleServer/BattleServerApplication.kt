@@ -30,33 +30,34 @@ class BattleServerApplication {
 			startingBoard.add(false)
 			i++;
 		}
-		val game = Game(getRandomString(16), startingBoard.toMutableList(), startingBoard.toMutableList(), startingBoard.toMutableList(), startingBoard.toMutableList(), "SetUp",  null, null,SseEmitter(Long.MAX_VALUE),null)
+		val game = Game(getRandomString(16), startingBoard.toMutableList(), startingBoard.toMutableList(), startingBoard.toMutableList(), startingBoard.toMutableList(), "waiting",  null, null,SseEmitter(Long.MAX_VALUE),null)
 		GamesRunning.add(game)
 
-		game.hostEmitter.onCompletion {		}
+		//game.hostEmitter.onCompletion {		}
 
 		game.hostEmitter.send(GameSocket(game.lobbyCode,game.currentPhase,game.hostShips,game.guestHits))
-
 
 		return game.hostEmitter;
 	}
 
 	@GetMapping("/joinGame/{lobbyCode}")
-	fun joinGame(@PathVariable lobbyCode: String) : ResponseEntity<SseEmitter>
+	fun joinGame(@PathVariable lobbyCode: String) : SseEmitter
 	{
 		for (game in GamesRunning)
 		{
 			if (game.lobbyCode == lobbyCode)
 			{
 				game.questEmitter = SseEmitter()
-				game.currentPhase = "ShipPlacing"
+				game.currentPhase = "shipPlacing"
 				game.hostEmitter.send(GameSocket(game.lobbyCode,game.currentPhase,game.hostShips,game.guestHits))
+				game.questEmitter!!.send(GameSocket(game.lobbyCode,game.currentPhase,game.hostShips,game.guestHits))
 
-				return ResponseEntity.status(HttpStatus.CREATED)
-					.body(game.questEmitter)
+				return game.questEmitter!!
 			}
 		}
-		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null)
+		val close = SseEmitter()
+		close.complete()
+		return close
 	}
 
 }

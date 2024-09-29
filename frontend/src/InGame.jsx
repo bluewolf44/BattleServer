@@ -3,13 +3,24 @@ import './InGame.css'
 
 function InGame({HandleBack,data}) {
     const boardSize = 7;
-    const [titleText,setTitleText] = useState("Waiting for other player...")
 
     const handleOnClick = (id) => {
         switch(data.currentPhase)
         {
             case "waiting":
+            case "shipPlacing":
         }
+    }
+
+    let titleText = ""
+    switch (data.currentPhase)
+    {
+        case "waiting":
+            titleText = "Waiting for other player...";
+            break;
+        case "shipPlacing":
+            titleText = "Please place your ships";
+            break;
     }
 
     return (
