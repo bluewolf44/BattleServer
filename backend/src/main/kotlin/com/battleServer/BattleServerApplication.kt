@@ -22,7 +22,7 @@ class BattleServerApplication {
 	fun helloWorld(): String = "Hello World"
 
 	@GetMapping("/createGame", produces = [MediaType.TEXT_EVENT_STREAM_VALUE])
-	fun createGame(): ResponseEntity<SseEmitter> {
+	fun createGame(): SseEmitter {
 		val size = 7;
 		var i = 0;
 		val startingBoard = mutableListOf<Boolean>()
@@ -30,12 +30,15 @@ class BattleServerApplication {
 			startingBoard.add(false)
 			i++;
 		}
-		val lobbyCode = getRandomString(16)
-		val game = Game(lobbyCode, startingBoard.toMutableList(), startingBoard.toMutableList(), startingBoard.toMutableList(), startingBoard.toMutableList(), "SetUp",  null, null,SseEmitter(),null)
+		val game = Game(getRandomString(16), startingBoard.toMutableList(), startingBoard.toMutableList(), startingBoard.toMutableList(), startingBoard.toMutableList(), "SetUp",  null, null,SseEmitter(Long.MAX_VALUE),null)
 		GamesRunning.add(game)
+
+		game.hostEmitter.onCompletion {		}
+
 		game.hostEmitter.send(GameSocket(game.lobbyCode,game.currentPhase,game.hostShips,game.guestHits))
 
-		return ResponseEntity.status(HttpStatus.CREATED).body(game.hostEmitter)
+
+		return game.hostEmitter;
 	}
 
 	@GetMapping("/joinGame/{lobbyCode}")
@@ -55,8 +58,6 @@ class BattleServerApplication {
 		}
 		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null)
 	}
-
-
 
 }
 
