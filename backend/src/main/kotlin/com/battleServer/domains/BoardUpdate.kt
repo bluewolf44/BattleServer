@@ -1,3 +1,3 @@
 package com.battleServer.domains
 
-data class BoardUpdate(val board:List<Boolean> ,val host:Boolean)
+data class BoardUpdate(val board: MutableList<Boolean> ,val host:Boolean)

@@ -25,6 +25,18 @@ function InGame({HandleBack,data,setData,host}) {
             case "shipPlacing":
                 placeShip(id);
                 break;
+            case "hostTurn":
+                if (host)
+                {
+                    setHit(id);
+                }
+                break;
+            case "guestTurn":
+                if (!host)
+                {
+                    setHit(id);
+                }
+                break;
         }
     }
 
@@ -33,6 +45,30 @@ function InGame({HandleBack,data,setData,host}) {
         temp.ships[id] = (!temp.ships[id]);
         setForceUpdate(id)
         setData(temp);
+    };
+
+    const setHit = (id) => {
+        fetch('http://localhost:8080/setHit/'+data.lobbyCode, {
+           method: 'POST',
+           body: JSON.stringify({
+               id:id,
+               host:host,
+           }),
+           headers: {
+             'Content-Type': 'application/json',
+           },
+        })
+        .then((res) => {
+            if (!res.ok) {
+                throw new Error('Failed upload board');
+            }
+            console.log(res.text())
+        })
+        .catch((err) => {
+            console.error(err);
+            setError('Failed to load properties. Please try again later.');
+            setIsLoading(false);
+        });
     };
 
     const HandlePlacement = () =>
@@ -94,7 +130,7 @@ function InGame({HandleBack,data,setData,host}) {
             }
             break;
         case "guestTurn":
-            if (host)
+            if (! host)
             {
                 titleText = "Your turn"
             }
@@ -104,29 +140,73 @@ function InGame({HandleBack,data,setData,host}) {
             break;
     }
 
+    const createButtons = () => {
+        const total = [];
+        for (let y=0;y<boardSize;y++)
+        {
+            const arr = [];
+            for (let x=0; x<boardSize;x++)
+            {
+                let className = ""
+                const id = boardSize*y+x
+                //On your turn
+                if ((host && data.currentPhase == "hostTurn") || (!host && data.currentPhase == "guestTurn") )
+                {
+                    if (data.hits[id])
+                    {
+                        if (data.ships[id])
+                        {
+                            className = "hitBoard"
+                        }
+                        else {
+                            className = "missBoard"
+                        }
+
+                    }else{
+                        className = "emptyBoard"
+                    }
+                }
+                else
+                {
+                    if (data.hits[id])
+                    {
+                        if (data.ships[id])
+                        {
+                            className = "hitBoard"
+                        }
+                        else {
+                            className = "missBoard"
+                        }
+
+                    }else{
+                        if (data.ships[id])
+                        {
+                            className = "shipBoard"
+                        }
+                        else {
+                            className = "emptyBoard"
+                        }
+                    }
+                }
+
+                arr.push(<button key = {boardSize*y+x} onClick = {() => handleOnClick(boardSize*y+x)} className = {className}/>);
+            }
+            total.push(
+                <div>
+                    {arr}
+                </div>
+            );
+        }
+        return total;
+    }
+
     return (
         <>
             {data.ships != null ? (
                 <>
                     <h1>{titleText}</h1>
                     <h2>{"Lobby code: "+data.lobbyCode}</h2>
-                    {(() => {
-                        const total = [];
-                        for (let y=0;y<boardSize;y++)
-                        {
-                            const arr = [];
-                            for (let x=0; x<boardSize;x++)
-                            {
-                                arr.push(<button key = {boardSize*y+x} onClick = {() => handleOnClick(boardSize*y+x)} className = {data.ships[boardSize*y+x] ? "shipBoard":"emptyBoard"}/>);
-                            }
-                            total.push(
-                                <div>
-                                    {arr}
-                                </div>
-                            );
-                        }
-                        return total;
-                    })()}
+                    {createButtons()}
 
                     {data.currentPhase == "shipPlacing" || (data.currentPhase == "waitingForHost" && host) || (data.currentPhase == "waitingForGuest" && !host) ? <button onClick = {HandlePlacement}>Confirm placement</button>:<p/>}
                 </>) : (<h2> Loading </h2>)
