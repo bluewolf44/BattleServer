@@ -8,10 +8,6 @@ function InGame({HandleBack,data,setData,host}) {
     const handleOnClick = (id) => {
         switch(data.currentPhase)
         {
-            case "hostDisconnected":
-            case "guestDisconnected":
-            case "waiting":
-                break;
             case "waitingForGuest":
                 if (!host)
                 {
@@ -38,6 +34,8 @@ function InGame({HandleBack,data,setData,host}) {
                 {
                     setHit(id);
                 }
+                break;
+            default:
                 break;
         }
     }
@@ -141,10 +139,28 @@ function InGame({HandleBack,data,setData,host}) {
             }
             break;
 
-            case "hostDisconnected":
-            case "guestDisconnected":
-                titleText = "Opponent Disconnected waiting for rejoin";
-                break;
+        case "hostDisconnected":
+        case "guestDisconnected":
+            titleText = "Opponent Disconnected waiting for rejoin";
+            break;
+
+        case "hostWin":
+             if (host)
+            {
+                titleText = "You Win :)"
+            } else {
+                titleText = "You Lose :("
+            }
+            break;
+        case "guestWin":
+             if (!host)
+            {
+                titleText = "You Win :)"
+            } else {
+                titleText = "You Lose :("
+            }
+            break;
+
     }
 
     const createButtons = () => {
@@ -167,7 +183,7 @@ function InGame({HandleBack,data,setData,host}) {
                         className = "missBoard"
                     }
                 }else{
-                    if (data.ships[id] &&((host && data.currentPhase == "hostTurn") || (!host && data.currentPhase == "guestTurn")))
+                    if (data.ships[id] && ((!host && data.currentPhase == "hostTurn") || (host && data.currentPhase == "guestTurn") || data.currentPhase == "shipPlacing" || data.currentPhase == "waitingForHost" || data.currentPhase == "waitingForGuest") )
                     {
                         className = "shipBoard"
                     }

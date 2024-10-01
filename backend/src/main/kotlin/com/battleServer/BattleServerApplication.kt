@@ -17,6 +17,11 @@ import kotlin.random.Random
 
 val GamesRunning = mutableListOf<Game>()
 
+
+const val delayBetweenTurns:Long = 3000 //in ms
+const val boardSize = 7 //x&y
+
+
 @RestController
 @SpringBootApplication
 @CrossOrigin(origins = ["http://localhost:5173"])
@@ -27,10 +32,9 @@ class BattleServerApplication {
 
 	@GetMapping("/createGame", produces = [MediaType.TEXT_EVENT_STREAM_VALUE])
 	fun createGame(): SseEmitter {
-		val size = 7
 		var i = 0
 		val startingBoard = mutableListOf<Boolean>()
-		while(i < size*size) {
+		while(i < boardSize*boardSize) {
 			startingBoard.add(false)
 			i++
 		}
@@ -138,7 +142,11 @@ class BattleServerApplication {
 					game.hostEmitter.send(gameSocket)
 					game.questEmitter!!.send(gameSocket)
 					game.currentPhase = "guestTurn"
-					sleep(3000)
+					if (checkWin(game.guestShips,game.hostHits))
+					{
+						game.currentPhase = "hostWin"
+					}
+					sleep(delayBetweenTurns)
 					gameSocket = GameSocket(game.lobbyCode,game.currentPhase,game.hostShips,game.guestHits)
 					game.hostEmitter.send(gameSocket)
 					game.questEmitter!!.send(gameSocket)
@@ -149,8 +157,11 @@ class BattleServerApplication {
 					game.hostEmitter.send(gameSocket)
 					game.questEmitter!!.send(gameSocket)
 					game.currentPhase = "hostTurn"
-					sleep(3000)
-					gameSocket = GameSocket(game.lobbyCode,game.currentPhase,game.guestShips,game.hostHits)
+					if (checkWin(game.hostShips,game.guestHits))
+					{
+						game.currentPhase = "guestWin"
+					}
+					sleep(delayBetweenTurns)
 					game.hostEmitter.send(gameSocket)
 					game.questEmitter!!.send(gameSocket)
 				}
@@ -159,14 +170,20 @@ class BattleServerApplication {
 		}
 		return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Lobby not found")
 	}
-
-
 }
 
-fun fireMissile(game: Game, x: Int, y: Int){
-	if(x >= 7 || y >= 7){
-		// some error handling
+fun checkWin(ships:MutableList<Boolean>,hits:MutableList<Boolean>):Boolean
+{
+	var i = 0
+	while (i < hits.size)
+	{
+		if (ships[i] && !hits[i])
+		{
+			return false
+		}
+		i++
 	}
+	return true
 }
 
 fun getRandomString(length: Int) : String {
