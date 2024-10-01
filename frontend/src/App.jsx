@@ -5,8 +5,9 @@ import './App.css'
 
 function App() {
     const [inGame,setInGame] = useState(false);
-    const [error,setError] =useState("")
-    const [data,setData] = useState({lobbyCode:""})
+    const [error,setError] =useState("");
+    const [data,setData] = useState({});
+    const [host,setHost] = useState(null);
     let eventSource;
 
 
@@ -20,7 +21,7 @@ function App() {
 
         eventSource.onmessage = (event) => {
             setData(JSON.parse(event.data))
-            console.log(data);
+            console.log(JSON.parse(event.data));
         };
 
         eventSource.onerror = (error) => {
@@ -33,6 +34,7 @@ function App() {
         };
 
         setInGame(true)
+        setHost(true)
 
         return () => {
             eventSource.close();
@@ -63,6 +65,7 @@ function App() {
         };
 
         setInGame(true)
+        setHost(false)
 
         return () => {
             eventSource.close();
@@ -76,7 +79,7 @@ function App() {
     return (
         <>
             {inGame ?
-                <InGame HandleBack = {HandleBack} data = {data}/>:
+                <InGame HandleBack = {HandleBack} data = {data} setData = {setData} host = {host}/>:
                 <Lobby HandleHost = {HandleHost} HandleJoin = {HandleJoin}/> }
         </>
     )

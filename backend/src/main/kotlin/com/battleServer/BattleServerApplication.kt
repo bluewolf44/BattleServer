@@ -1,5 +1,6 @@
 package com.battleServer
 
+import com.battleServer.domains.BoardUpdate
 import com.battleServer.domains.Game
 import com.battleServer.domains.GameSocket
 import org.springframework.boot.autoconfigure.SpringBootApplication
@@ -41,7 +42,7 @@ class BattleServerApplication {
 	}
 
 	@GetMapping("/joinGame/{lobbyCode}")
-	fun joinGame(@PathVariable lobbyCode: String) : SseEmitter
+	fun joinGame(@PathVariable lobbyCode: String) : SseEmitter?
 	{
 		for (game in GamesRunning)
 		{
@@ -55,9 +56,27 @@ class BattleServerApplication {
 				return game.questEmitter!!
 			}
 		}
-		val close = SseEmitter()
-		close.complete()
-		return close
+		return null
+	}
+
+	@PostMapping("updateBoard/{lobbyCode}")
+	fun updateBoard(@PathVariable lobbyCode: String,@RequestBody data:BoardUpdate) :  ResponseEntity<String>
+	{
+		for (game in GamesRunning) {
+			if (game.lobbyCode == lobbyCode) {
+				if (data.host) {
+					game.hostShips = data.board
+					game.currentPhase = "waitingForGuest"
+				} else {
+					game.guestShips = data.board
+					game.currentPhase = "waitingForHost"
+				}
+				game.hostEmitter.send(GameSocket(game.lobbyCode,game.currentPhase,game.hostShips,game.hostHits))
+				game.questEmitter!!.send(GameSocket(game.lobbyCode,game.currentPhase,game.guestShips,game.guestHits))
+				return ResponseEntity.status(HttpStatus.CREATED).body("ShipBoard Updated")
+			}
+		}
+		return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Lobby not found")
 	}
 
 }
