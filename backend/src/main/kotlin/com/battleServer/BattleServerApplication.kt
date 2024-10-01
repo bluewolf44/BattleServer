@@ -27,17 +27,25 @@ class BattleServerApplication {
 
 	@GetMapping("/createGame", produces = [MediaType.TEXT_EVENT_STREAM_VALUE])
 	fun createGame(): SseEmitter {
-		val size = 7;
-		var i = 0;
+		val size = 7
+		var i = 0
 		val startingBoard = mutableListOf<Boolean>()
 		while(i < size*size) {
 			startingBoard.add(false)
-			i++;
+			i++
 		}
 		val game = Game(getRandomString(16), startingBoard.toMutableList(), startingBoard.toMutableList(), startingBoard.toMutableList(), startingBoard.toMutableList(), "waiting",  null, null,SseEmitter(Long.MAX_VALUE),null)
 		GamesRunning.add(game)
 
-		//game.hostEmitter.onCompletion {		}
+		game.hostEmitter.onError {
+			if (game.currentPhase == "guestDisconnected")
+			{
+				GamesRunning.remove(game)
+			} else {
+				game.currentPhase = "hostDisconnected"
+				game.questEmitter!!.send(GameSocket(game.lobbyCode, game.currentPhase, game.guestShips, game.hostHits))
+			}
+		}
 
 		game.hostEmitter.send(GameSocket(game.lobbyCode,game.currentPhase,game.hostShips,game.guestHits))
 
@@ -52,6 +60,17 @@ class BattleServerApplication {
 			if (game.lobbyCode == lobbyCode)
 			{
 				game.questEmitter = SseEmitter(Long.MAX_VALUE)
+
+				game.questEmitter!!.onError {
+					if (game.currentPhase == "hostDisconnected")
+					{
+						GamesRunning.remove(game)
+					} else {
+						game.currentPhase = "guestDisconnected"
+						game.hostEmitter.send(GameSocket(game.lobbyCode, game.currentPhase, game.guestShips, game.hostHits))
+					}
+				}
+
 				game.currentPhase = "shipPlacing"
 				game.hostEmitter.send(GameSocket(game.lobbyCode,game.currentPhase,game.hostShips,game.guestHits))
 				game.questEmitter!!.send(GameSocket(game.lobbyCode,game.currentPhase,game.hostShips,game.guestHits))

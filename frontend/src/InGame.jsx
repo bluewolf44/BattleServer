@@ -8,6 +8,8 @@ function InGame({HandleBack,data,setData,host}) {
     const handleOnClick = (id) => {
         switch(data.currentPhase)
         {
+            case "hostDisconnected":
+            case "guestDisconnected":
             case "waiting":
                 break;
             case "waitingForGuest":
@@ -138,6 +140,11 @@ function InGame({HandleBack,data,setData,host}) {
                 titleText = "Opponent turn"
             }
             break;
+
+            case "hostDisconnected":
+            case "guestDisconnected":
+                titleText = "Opponent Disconnected waiting for rejoin";
+                break;
     }
 
     const createButtons = () => {
@@ -150,42 +157,22 @@ function InGame({HandleBack,data,setData,host}) {
                 let className = ""
                 const id = boardSize*y+x
                 //On your turn
-                if ((host && data.currentPhase == "hostTurn") || (!host && data.currentPhase == "guestTurn") )
+                if (data.hits[id])
                 {
-                    if (data.hits[id])
+                    if (data.ships[id])
                     {
-                        if (data.ships[id])
-                        {
-                            className = "hitBoard"
-                        }
-                        else {
-                            className = "missBoard"
-                        }
-
-                    }else{
-                        className = "emptyBoard"
+                        className = "hitBoard"
                     }
-                }
-                else
-                {
-                    if (data.hits[id])
+                    else {
+                        className = "missBoard"
+                    }
+                }else{
+                    if (data.ships[id] &&((host && data.currentPhase == "hostTurn") || (!host && data.currentPhase == "guestTurn")))
                     {
-                        if (data.ships[id])
-                        {
-                            className = "hitBoard"
-                        }
-                        else {
-                            className = "missBoard"
-                        }
-
-                    }else{
-                        if (data.ships[id])
-                        {
-                            className = "shipBoard"
-                        }
-                        else {
-                            className = "emptyBoard"
-                        }
+                        className = "shipBoard"
+                    }
+                    else {
+                        className = "emptyBoard"
                     }
                 }
 
