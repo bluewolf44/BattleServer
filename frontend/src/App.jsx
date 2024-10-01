@@ -52,7 +52,7 @@ function App() {
 
         eventSource.onmessage = (event) => {
             setData(JSON.parse(event.data))
-            console.log(data);
+            console.log(JSON.parse(event.data));
         };
 
         eventSource.onerror = (error) => {

@@ -10,6 +10,18 @@ function InGame({HandleBack,data,setData,host}) {
         {
             case "waiting":
                 break;
+            case "waitingForGuest":
+                if (!host)
+                {
+                    placeShip(id);
+                }
+                break;
+            case "waitingForHost":
+                if (host)
+                {
+                    placeShip(id);
+                }
+                break;
             case "shipPlacing":
                 placeShip(id);
                 break;
@@ -21,7 +33,7 @@ function InGame({HandleBack,data,setData,host}) {
         temp.ships[id] = (!temp.ships[id]);
         setForceUpdate(id)
         setData(temp);
-    }
+    };
 
     const HandlePlacement = () =>
     {
@@ -60,18 +72,35 @@ function InGame({HandleBack,data,setData,host}) {
         case "waitingForHost":
             if (host)
             {
-                titleText = "Other player ready";
+                titleText = "Opponent ready";
                 break;
             }
-            titleText = "Waiting for other player";
+            titleText = "Waiting for opponent";
             break;
         case "waitingForGuest":
             if (host)
             {
-                titleText = "Waiting for other player";
+                titleText = "Waiting for opponent";
                 break;
             }
-            titleText = "Other player ready";
+            titleText = "Opponent ready";
+            break;
+        case "hostTurn":
+            if (host)
+            {
+                titleText = "Your turn"
+            } else {
+                titleText = "Opponent turn"
+            }
+            break;
+        case "guestTurn":
+            if (host)
+            {
+                titleText = "Your turn"
+            }
+            else {
+                titleText = "Opponent turn"
+            }
             break;
     }
 
@@ -99,7 +128,7 @@ function InGame({HandleBack,data,setData,host}) {
                         return total;
                     })()}
 
-                    {data.currentPhase == "shipPlacing"? <button onClick = {HandlePlacement}>Confirm placement</button>:<p/>}
+                    {data.currentPhase == "shipPlacing" || (data.currentPhase == "waitingForHost" && host) || (data.currentPhase == "waitingForGuest" && !host) ? <button onClick = {HandlePlacement}>Confirm placement</button>:<p/>}
                 </>) : (<h2> Loading </h2>)
             }
             <button onClick = {HandleBack}>Back</button>

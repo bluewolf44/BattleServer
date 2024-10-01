@@ -10,6 +10,7 @@ import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter
+import kotlin.random.Random
 
 
 val GamesRunning = mutableListOf<Game>()
@@ -59,6 +60,7 @@ class BattleServerApplication {
 		return null
 	}
 
+	//For placing ships
 	@PostMapping("updateBoard/{lobbyCode}")
 	fun updateBoard(@PathVariable lobbyCode: String,@RequestBody data:BoardUpdate) :  ResponseEntity<String>
 	{
@@ -66,10 +68,20 @@ class BattleServerApplication {
 			if (game.lobbyCode == lobbyCode) {
 				if (data.host) {
 					game.hostShips = data.board
-					game.currentPhase = "waitingForGuest"
+					if(game.currentPhase == "waitingForHost") {
+						// Starting Game
+						game.currentPhase = getRandomUserInGame()
+					} else {
+						game.currentPhase = "waitingForGuest"
+					}
 				} else {
 					game.guestShips = data.board
-					game.currentPhase = "waitingForHost"
+					if(game.currentPhase == "waitingForGuest") {
+						// Starting Game
+						game.currentPhase = getRandomUserInGame()
+					} else {
+						game.currentPhase = "waitingForHost"
+					}
 				}
 				game.hostEmitter.send(GameSocket(game.lobbyCode,game.currentPhase,game.hostShips,game.hostHits))
 				game.questEmitter!!.send(GameSocket(game.lobbyCode,game.currentPhase,game.guestShips,game.guestHits))
@@ -81,8 +93,12 @@ class BattleServerApplication {
 
 }
 
-fun submitShipPlacement(placement: Array<Array<Boolean>>){
-
+fun getRandomUserInGame():String
+{
+	if (Random.nextInt(0, 1) == 0){
+		return "hostTurn"
+	}
+	return "guestTurn"
 }
 
 fun fireMissile(game: Game, x: Int, y: Int){
