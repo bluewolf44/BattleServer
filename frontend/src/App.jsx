@@ -4,15 +4,19 @@ import Lobby from './Lobby'
 import './App.css'
 
 function App() {
+    //Display lobby or inGame
     const [inGame,setInGame] = useState(false);
+    //If theres an error
     const [error,setError] =useState("");
+    //All data get from a sse from backend to a EventSource
     const [data,setData] = useState({});
+    //If user is host:true or joins using lobbyCode:false
     const [host,setHost] = useState(null);
     let eventSource;
 
 
     const HandleHost = () => {
-
+        //Creating the sse link using this EventSource
         const eventSource = new EventSource('http://localhost:8080/createGame');
 
         eventSource.onopen = (event) => {
@@ -25,7 +29,6 @@ function App() {
         };
 
         eventSource.onerror = (error) => {
-            //console.error('EventSource failed:', error.target.readyState);
             console.log(event.target.readyState)
                 if (event.target.readyState === EventSource.CLOSED) {
                   console.log('eventsource closed (' + event.target.readyState + ')')
@@ -43,7 +46,7 @@ function App() {
     }
 
     const HandleJoin = async (lobbyCode) => {
-
+        //Creating the sse link using this EventSource
         const eventSource = new EventSource('http://localhost:8080/joinGame/'+lobbyCode);
 
         eventSource.onopen = (event) => {

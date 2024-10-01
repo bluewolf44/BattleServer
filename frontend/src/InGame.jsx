@@ -2,19 +2,24 @@ import { useState } from 'react'
 import './InGame.css'
 
 function InGame({HandleBack,data,setData,host}) {
-    const [forceUpdate,setForceUpdate] = useState(-1)
+    const [forceUpdate,setForceUpdate] = useState(-1) //To forceUpdate the page using in boardPlacement
     const boardSize = 7;
 
+
+    // When the button of the board is pressed
+    // uses the currentPhase look into backend as well
     const handleOnClick = (id) => {
         switch(data.currentPhase)
         {
             case "waitingForGuest":
+                //Placing ships only on guest
                 if (!host)
                 {
                     placeShip(id);
                 }
                 break;
             case "waitingForHost":
+                //Placing ships only on host
                 if (host)
                 {
                     placeShip(id);
@@ -24,12 +29,14 @@ function InGame({HandleBack,data,setData,host}) {
                 placeShip(id);
                 break;
             case "hostTurn":
+                //host can try to hit a ship
                 if (host)
                 {
                     setHit(id);
                 }
                 break;
             case "guestTurn":
+                //guest can try to gu a ship
                 if (!host)
                 {
                     setHit(id);
@@ -40,17 +47,20 @@ function InGame({HandleBack,data,setData,host}) {
         }
     }
 
+    //Places ship only in placement phase
     const placeShip = (id) => {
         const temp = data;
         temp.ships[id] = (!temp.ships[id]);
-        setForceUpdate(id)
+        //Using forceUpdate as it don't work without
+        setForceUpdate(id);
         setData(temp);
     };
 
+    //Will only work on that client turn
     const setHit = (id) => {
         fetch('http://localhost:8080/setHit/'+data.lobbyCode, {
            method: 'POST',
-           body: JSON.stringify({
+           body: JSON.stringify({//Using hitUpdate in backend for object
                id:id,
                host:host,
            }),
@@ -62,7 +72,6 @@ function InGame({HandleBack,data,setData,host}) {
             if (!res.ok) {
                 throw new Error('Failed upload board');
             }
-            console.log(res.text())
         })
         .catch((err) => {
             console.error(err);
@@ -71,11 +80,12 @@ function InGame({HandleBack,data,setData,host}) {
         });
     };
 
+    //Run on acceptance of placement
     const HandlePlacement = () =>
     {
         fetch('http://localhost:8080/updateBoard/'+data.lobbyCode, {
                method: 'POST',
-               body: JSON.stringify({
+               body: JSON.stringify({// using BoardUpdate in backend for object
                    board:data.ships,
                    host:host,
                }),
@@ -95,7 +105,7 @@ function InGame({HandleBack,data,setData,host}) {
             });
     }
 
-
+    //Setting the tile depending on what phase it is
     let titleText = "";
     switch (data.currentPhase)
     {
@@ -106,7 +116,7 @@ function InGame({HandleBack,data,setData,host}) {
             titleText = "Please place your ships";
             break;
         case "waitingForHost":
-            if (host)
+            if (host)//true if host, false if guest
             {
                 titleText = "Opponent ready";
                 break;
@@ -114,15 +124,15 @@ function InGame({HandleBack,data,setData,host}) {
             titleText = "Waiting for opponent";
             break;
         case "waitingForGuest":
-            if (host)
+            if (!host)//true if host, false if guest
             {
-                titleText = "Waiting for opponent";
+                titleText = "Opponent ready";
                 break;
             }
-            titleText = "Opponent ready";
+            titleText = "Waiting for opponent";
             break;
         case "hostTurn":
-            if (host)
+            if (host)//true if host, false if guest
             {
                 titleText = "Your turn"
             } else {
@@ -130,7 +140,7 @@ function InGame({HandleBack,data,setData,host}) {
             }
             break;
         case "guestTurn":
-            if (! host)
+            if (! host)//true if host, false if guest
             {
                 titleText = "Your turn"
             }
@@ -145,7 +155,7 @@ function InGame({HandleBack,data,setData,host}) {
             break;
 
         case "hostWin":
-             if (host)
+             if (host)//true if host, false if guest
             {
                 titleText = "You Win :)"
             } else {
@@ -153,7 +163,7 @@ function InGame({HandleBack,data,setData,host}) {
             }
             break;
         case "guestWin":
-             if (!host)
+             if (!host)//true if host, false if guest
             {
                 titleText = "You Win :)"
             } else {
@@ -163,6 +173,7 @@ function InGame({HandleBack,data,setData,host}) {
 
     }
 
+    //used to create the buttons for the game board
     const createButtons = () => {
         const total = [];
         for (let y=0;y<boardSize;y++)
@@ -183,6 +194,7 @@ function InGame({HandleBack,data,setData,host}) {
                         className = "missBoard"
                     }
                 }else{
+                    //only displays ships if it your turn or in placement
                     if (data.ships[id] && ((!host && data.currentPhase == "hostTurn") || (host && data.currentPhase == "guestTurn") || data.currentPhase == "shipPlacing" || data.currentPhase == "waitingForHost" || data.currentPhase == "waitingForGuest") )
                     {
                         className = "shipBoard"
