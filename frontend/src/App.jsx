@@ -21,11 +21,18 @@ function App() {
 
         eventSource.onopen = (event) => {
             console.log("connection opened")
+            setInGame(true)
+            setHost(true)
         }
 
         eventSource.onmessage = (event) => {
-            setData(JSON.parse(event.data))
-            console.log(JSON.parse(event.data));
+            const temp = JSON.parse(event.data);
+            if (temp.currentPhase != "waitingForHost" && temp.currentPhase != "waitingForGuest")
+            {
+                setData(temp);
+                console.log("update: " + temp.currentPhase);
+            }
+            console.log(temp);
         };
 
         eventSource.onerror = (error) => {
@@ -35,9 +42,6 @@ function App() {
                 }
             eventSource.close();
         };
-
-        setInGame(true)
-        setHost(true)
 
         return () => {
             eventSource.close();
