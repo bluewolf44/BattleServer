@@ -1,5 +1,7 @@
-CREATE TABLE user (
+CREATE TABLE player (
+    player_id, integer
     username text,
     password text,
-    winstreak integer
+    current_winstreak integer,
+    highest_winstreak integer
 )
