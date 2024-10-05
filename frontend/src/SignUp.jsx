@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-export default function SignUp(){
+export default function SignUp({setError}){
     const [signUpForm, setSignUpForm] = useState(true);
     const [user, setUser] = useState({
         username: '',
@@ -39,6 +39,15 @@ export default function SignUp(){
                     highestWinStreak: 0
                 })
             })
+            if (response.status == 409)
+            {
+                setError("Username already exists");
+            }
+            else
+            {
+                setError("Account created");
+            }
+
             console.log(response);
         } catch(error){
             console.error(error.message);
@@ -51,9 +60,9 @@ export default function SignUp(){
             <form hidden={signUpForm}>
                 <h2>Sign up</h2>
                 <label htmlFor="username">Username</label>
-                <input name="username" id="username" type="text" onChange={HandleChange}></input>
+                <input name="username" id="username" type="text" value = {user.username} onChange={HandleChange}></input>
                 <label htmlFor="password">Password</label>
-                <input name="password" id="password" type="password" onChange={HandleChange}></input>
+                <input name="password" id="password" type="password" value = {user.password} onChange={HandleChange}></input>
                 <button type="submit" onClick={HandleSignUp}>Confirm</button>
             </form>
             

@@ -31,6 +31,10 @@ class BattleServerApplication(@Autowired val playerService: PlayerService) {
 
 	@PostMapping("/signUp")
 	fun signUp(@RequestBody data: Player): ResponseEntity<String> {
+		if(playerService.checkPlayerUserName(data.userName))
+		{
+			return ResponseEntity.status(HttpStatus.CONFLICT).body("a test");
+		}
 		playerService.save(data);
 		return ResponseEntity.status(HttpStatus.CREATED).body("a test");
 	}
@@ -107,7 +111,7 @@ class BattleServerApplication(@Autowired val playerService: PlayerService) {
 		{
 		for (game in GamesRunning) {
 			//Checking if both client are done
-			var startGame = false
+			var startGame:Boolean
 			if (game.lobbyCode == lobbyCode) {
 				//checking which client is making the request
 				if (data.host) {
@@ -203,14 +207,6 @@ class BattleServerApplication(@Autowired val playerService: PlayerService) {
 			}
 		}
 		return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Lobby not found")
-	}
-
-	@PostMapping("createPlayer")
-	fun test(@RequestBody player: Player) : String
-	{
-		playerService.save(player)
-
-		return "worked"
 	}
 
 }

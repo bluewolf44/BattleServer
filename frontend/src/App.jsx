@@ -111,7 +111,8 @@ function App() {
             {inGame ?
                 <InGame HandleBack = {HandleBack} data = {data} setData = {setData} host = {host} hasShot = {hasShot} setHasShot = {setHasShot}/>:
                 <Lobby HandleHost = {HandleHost} HandleJoin = {HandleJoin}/> }
-                <SignUp></SignUp>
+                <SignUp setError={setError} />
+                <p>{error}</p>
         </>
     )
 }
