@@ -15,8 +15,8 @@ function App() {
     const [host,setHost] = useState(null);
     //Checking if has shot this turn
     const [hasShot,setHasShot] = useState(false);
-    //Amount of ship placing down
-    const [amountLeft,setAmountLeft] = useState(10);
+    //The current Ship being placed
+    const [currentPlacement,setCurrentPlacement] = useState({});
 
 
     let shipBoard = useRef();
@@ -31,9 +31,10 @@ function App() {
         const eventSource = new EventSource('http://localhost:8080/createGame');
 
         eventSource.onopen = async (event) => {
-            console.log("connection opened")
-            setInGame(true)
-            setHost(true)
+            console.log("connection opened");
+            setInGame(true);
+            setHost(true);
+            setCurrentPlacement({currentShip:0,rotation:false});
         }
 
         eventSource.onmessage = (event) => {
@@ -70,9 +71,10 @@ function App() {
         const eventSource = new EventSource('http://localhost:8080/joinGame/'+lobbyCode);
 
         eventSource.onopen = (event) => {
-            console.log("connection opened")
-            setInGame(true)
-            setHost(false)
+            console.log("connection opened");
+            setInGame(true);
+            setHost(false);
+            setCurrentPlacement({currentShip:0,rotation:false});
         }
 
         eventSource.onmessage = (event) => {
@@ -119,8 +121,8 @@ function App() {
                     host = {host}
                     hasShot = {hasShot}
                     setHasShot = {setHasShot}
-                    amountLeft={amountLeft}
-                    setAmountLeft={setAmountLeft}
+                    currentPlacement = {currentPlacement}
+                    setCurrentPlacement = {setCurrentPlacement}
                 />:
                 <Lobby HandleHost = {HandleHost} HandleJoin = {HandleJoin}/> }
                 <SignUp setError={setError} />

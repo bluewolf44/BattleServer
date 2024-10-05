@@ -1,8 +1,11 @@
 import { useState } from 'react'
 import './InGame.css'
 
-function InGame({HandleBack,data,setData,host,hasShot,setHasShot,amountLeft,setAmountLeft}) {
+function InGame({HandleBack,data,setData,host,hasShot,setHasShot,currentPlacement,setCurrentPlacement}) {
+    const [forceUpdate,setForceUpdate] = useState(-1); //To forceUpdate the page using in boardPlacement
+    const [placementHistory,setPlacementHistory] = useState([])//The placement History;
     const boardSize = 7;
+    const ships = [4,3,2,3,2]; //The size of the ship being added
 
     // When the button of the board is pressed
     // uses the currentPhase look into backend as well
@@ -45,23 +48,94 @@ function InGame({HandleBack,data,setData,host,hasShot,setHasShot,amountLeft,setA
         }
     }
 
-    //Places ship only in placement phase
     const placeShip = (id) => {
+        if (currentPlacement.currentShip >= ships.length)
+        {
+            return;
+        }
 
         const temp = data;
-        if (temp.ships[id])
+        if (currentPlacement.rotation)
         {
-            setAmountLeft(amountLeft + 1);
-            temp.ships[id] = (!temp.ships[id]);
-            setData(temp);
-        } else if (amountLeft > 0)
-        {
-            setAmountLeft(amountLeft - 1);
-            temp.ships[id] = (!temp.ships[id]);
-            //Using forceUpdate as it don't work without
-            setData(temp);
+            for (let i=0;i<ships[currentPlacement.currentShip];i++)
+            {
+                if(id%boardSize+i >= boardSize || temp.ships[id+i])
+                {
+                    return;
+                }
+            }
+
+            for (let i=0;i<ships[currentPlacement.currentShip];i++)
+            {
+                temp.ships[id+i] = true;
+            }
         }
-    };
+        else
+        {
+            for (let i=0;i<ships[currentPlacement.currentShip];i++)
+            {
+                if(id+boardSize*i >= boardSize*boardSize || temp.ships[id+boardSize*i])
+                {
+                    return;
+                }
+            }
+
+            for (let i=0;i<ships[currentPlacement.currentShip];i++)
+            {
+                temp.ships[id+boardSize*i] = true;
+            }
+        }
+        setPlacementHistory([...placementHistory,{
+            ship:currentPlacement.currentShip,
+            rotation:currentPlacement.rotation,
+            id:id,
+            }]);
+        setData(temp);
+        setCurrentPlacement({currentShip:currentPlacement.currentShip+1,rotation:false})
+    }
+
+    const HandleReset = () => {
+        const temp = data;
+        for (let i=0;i<boardSize*boardSize;i++)
+        {
+            temp.ships[i] = false;
+        }
+        setData(temp);
+        setCurrentPlacement({currentShip:0,rotation:false});
+    }
+
+    const HandleRotate = () => {
+        const temp = currentPlacement;
+        temp.rotation = (!temp.rotation);
+        setForceUpdate(temp.rotation);
+        setCurrentPlacement(temp);
+    }
+
+    const HandleUndo = () => {
+        if (placementHistory.length <= 0 || currentPlacement.currentShip < 0)
+        {
+            return
+        }
+        const place = placementHistory;
+        const lastMove = place.pop();
+        const temp = data;
+        if (lastMove.rotation)
+        {
+            for (let i=0;i<ships[lastMove.ship];i++)
+            {
+                temp.ships[lastMove.id+i] = false;
+            }
+        } else {
+            for (let i=0;i<ships[lastMove.ship];i++)
+            {
+                temp.ships[lastMove.id+boardSize*i] = false;
+            }
+        }
+        setCurrentPlacement({currentShip:currentPlacement.currentShip-1,rotation:false});
+        setForceUpdate(lastMove.id);
+        setData(temp);
+        setPlacementHistory(place);
+    }
 
     //Will only work on that client turn
     const setHit = (id) => {
@@ -236,7 +310,18 @@ function InGame({HandleBack,data,setData,host,hasShot,setHasShot,amountLeft,setA
                     <h2>{"Lobby code: "+data.lobbyCode}</h2>
                     {createButtons()}
 
-                    {data.currentPhase == "shipPlacing" || (data.currentPhase == "waitingForHost" && host) || (data.currentPhase == "waitingForGuest" && !host) ? <> <p>{"Ship left to place: " +amountLeft}</p> <button onClick = {HandlePlacement}>Confirm placement</button> </> :<p/>}
+                    {data.currentPhase == "shipPlacing" || (data.currentPhase == "waitingForHost" && host) || (data.currentPhase == "waitingForGuest" && !host) ?
+                        <>
+                            <div>
+                                <button onClick = {HandleUndo}>Undo</button>
+                                <button onClick = {HandleReset}>Restart</button>
+                                <button onClick = {HandleRotate}>Rotate</button>
+                            </div>
+                            <p>{currentPlacement.currentShip < ships.length ? "Size: " + ships[currentPlacement.currentShip] + ", Rotation: " + (currentPlacement.rotation ? "horizontal" : "vertical") : "All ships Placed"}</p>
+
+                            <button onClick = {HandlePlacement}>Confirm placement</button>
+                        </>
+                    :<p/>}
                 </>) : (<h2> Loading </h2>)
             }
             <button onClick = {HandleBack}>Back</button>

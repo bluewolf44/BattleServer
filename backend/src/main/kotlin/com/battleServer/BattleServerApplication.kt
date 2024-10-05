@@ -111,7 +111,7 @@ class BattleServerApplication(@Autowired val playerService: PlayerService) {
 		{
 		for (game in GamesRunning) {
 			//Checking if both client are done
-			var startGame:Boolean
+			val startGame:Boolean
 			if (game.lobbyCode == lobbyCode) {
 				//checking which client is making the request
 				if (data.host) {
