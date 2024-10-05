@@ -1,5 +1,7 @@
 package com.battleServer
 
+import com.battleServer.PlayerService
+import com.battleServer.domains.Player
 import com.battleServer.domains.BoardUpdate
 import com.battleServer.domains.Game
 import com.battleServer.domains.GameSocket
@@ -25,7 +27,10 @@ const val boardSize = 7 //x&y
 @RestController
 @SpringBootApplication
 @CrossOrigin(origins = ["http://localhost:5173"])
-class BattleServerApplication {
+class BattleServerApplication(val service: PlayerService) {
+
+	@GetMapping("/db")
+	fun index(): List<Player> = service.findPlayers()
 
 	@GetMapping("")
 	fun helloWorld(): String = "Hello World"
