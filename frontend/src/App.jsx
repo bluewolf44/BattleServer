@@ -15,6 +15,9 @@ function App() {
     const [host,setHost] = useState(null);
     //Checking if has shot this turn
     const [hasShot,setHasShot] = useState(false);
+    //Amount of ship placing down
+    const [amountLeft,setAmountLeft] = useState(10);
+
 
     let shipBoard = useRef();
 
@@ -109,7 +112,16 @@ function App() {
     return (
         <>
             {inGame ?
-                <InGame HandleBack = {HandleBack} data = {data} setData = {setData} host = {host} hasShot = {hasShot} setHasShot = {setHasShot}/>:
+                <InGame
+                    HandleBack = {HandleBack}
+                    data = {data}
+                    setData = {setData}
+                    host = {host}
+                    hasShot = {hasShot}
+                    setHasShot = {setHasShot}
+                    amountLeft={amountLeft}
+                    setAmountLeft={setAmountLeft}
+                />:
                 <Lobby HandleHost = {HandleHost} HandleJoin = {HandleJoin}/> }
                 <SignUp setError={setError} />
                 <p>{error}</p>

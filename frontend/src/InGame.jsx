@@ -1,10 +1,9 @@
 import { useState } from 'react'
 import './InGame.css'
 
-function InGame({HandleBack,data,setData,host,hasShot,setHasShot}) {
+function InGame({HandleBack,data,setData,host,hasShot,setHasShot,amountLeft,setAmountLeft}) {
     const [forceUpdate,setForceUpdate] = useState(-1); //To forceUpdate the page using in boardPlacement
     const boardSize = 7;
-
 
     // When the button of the board is pressed
     // uses the currentPhase look into backend as well
@@ -49,11 +48,22 @@ function InGame({HandleBack,data,setData,host,hasShot,setHasShot}) {
 
     //Places ship only in placement phase
     const placeShip = (id) => {
+
         const temp = data;
-        temp.ships[id] = (!temp.ships[id]);
-        //Using forceUpdate as it don't work without
-        setForceUpdate(id);
-        setData(temp);
+        if (temp.ships[id])
+        {
+            setAmountLeft(amountLeft + 1);
+            temp.ships[id] = (!temp.ships[id]);
+            setForceUpdate(id);
+            setData(temp);
+        } else if (amountLeft > 0)
+        {
+            setAmountLeft(amountLeft - 1);
+            temp.ships[id] = (!temp.ships[id]);
+            //Using forceUpdate as it don't work without
+            setForceUpdate(id);
+            setData(temp);
+        }
     };
 
     //Will only work on that client turn
@@ -229,7 +239,7 @@ function InGame({HandleBack,data,setData,host,hasShot,setHasShot}) {
                     <h2>{"Lobby code: "+data.lobbyCode}</h2>
                     {createButtons()}
 
-                    {data.currentPhase == "shipPlacing" || (data.currentPhase == "waitingForHost" && host) || (data.currentPhase == "waitingForGuest" && !host) ? <button onClick = {HandlePlacement}>Confirm placement</button>:<p/>}
+                    {data.currentPhase == "shipPlacing" || (data.currentPhase == "waitingForHost" && host) || (data.currentPhase == "waitingForGuest" && !host) ? <> <p>{"Ship left to place: " +amountLeft}</p> <button onClick = {HandlePlacement}>Confirm placement</button> </> :<p/>}
                 </>) : (<h2> Loading </h2>)
             }
             <button onClick = {HandleBack}>Back</button>
