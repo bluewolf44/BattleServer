@@ -29,6 +29,12 @@ const val boardSize = 7 //x&y
 @CrossOrigin(origins = ["http://localhost:5173"])
 class BattleServerApplication(@Autowired val playerService: PlayerService) {
 
+	@PostMapping("/signUp")
+	fun signUp(@RequestBody data: Player): ResponseEntity<String> {
+		playerService.save(data);
+		return ResponseEntity.status(HttpStatus.CREATED).body("a test");
+	}
+
 	@GetMapping("/db")
 	fun index(): List<Player> = playerService.findPlayers()
 

@@ -1,6 +1,7 @@
 import { useState,useRef,useEffect } from 'react'
 import InGame from './InGame'
 import Lobby from './Lobby'
+import SignUp from './SignUp'
 import './App.css'
 
 function App() {
@@ -110,6 +111,7 @@ function App() {
             {inGame ?
                 <InGame HandleBack = {HandleBack} data = {data} setData = {setData} host = {host} hasShot = {hasShot} setHasShot = {setHasShot}/>:
                 <Lobby HandleHost = {HandleHost} HandleJoin = {HandleJoin}/> }
+                <SignUp></SignUp>
         </>
     )
 }

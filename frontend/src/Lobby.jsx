@@ -16,10 +16,6 @@ function Lobby({HandleHost,HandleJoin}) {
                 <p>or</p>
                 <button onClick={HandleHost}>Host Game</button>
             </div>
-            <div id = "AccountsDiv">
-                <button className = "AccountButton">Sign up</button>
-                <button className = "AccountButton">Log in</button>
-            </div>
         </>
     )
 }
