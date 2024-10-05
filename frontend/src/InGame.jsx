@@ -2,7 +2,6 @@ import { useState } from 'react'
 import './InGame.css'
 
 function InGame({HandleBack,data,setData,host,hasShot,setHasShot,amountLeft,setAmountLeft}) {
-    const [forceUpdate,setForceUpdate] = useState(-1); //To forceUpdate the page using in boardPlacement
     const boardSize = 7;
 
     // When the button of the board is pressed
@@ -54,14 +53,12 @@ function InGame({HandleBack,data,setData,host,hasShot,setHasShot,amountLeft,setA
         {
             setAmountLeft(amountLeft + 1);
             temp.ships[id] = (!temp.ships[id]);
-            setForceUpdate(id);
             setData(temp);
         } else if (amountLeft > 0)
         {
             setAmountLeft(amountLeft - 1);
             temp.ships[id] = (!temp.ships[id]);
             //Using forceUpdate as it don't work without
-            setForceUpdate(id);
             setData(temp);
         }
     };
