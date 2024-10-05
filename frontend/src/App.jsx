@@ -12,6 +12,8 @@ function App() {
     const [data,setData] = useState({});
     //If user is host:true or joins using lobbyCode:false
     const [host,setHost] = useState(null);
+    //Checking if has shot this turn
+    const [hasShot,setHasShot] = useState(false);
 
     let shipBoard = useRef();
 
@@ -36,6 +38,11 @@ function App() {
             {
                 temp.ships = shipBoard.current;
             }
+            if(temp.currentPhase == "guestTurn")
+            {
+                setHasShot(false);
+            }
+
             setData(temp);
             console.log(temp);
         };
@@ -70,6 +77,12 @@ function App() {
             {
                 temp.ships = shipBoard.current;
             }
+
+            if(temp.currentPhase == "hostTurn")
+            {
+                setHasShot(false);
+            }
+
             setData(temp);
             console.log(temp);
         };
@@ -95,7 +108,7 @@ function App() {
     return (
         <>
             {inGame ?
-                <InGame HandleBack = {HandleBack} data = {data} setData = {setData} host = {host}/>:
+                <InGame HandleBack = {HandleBack} data = {data} setData = {setData} host = {host} hasShot = {hasShot} setHasShot = {setHasShot}/>:
                 <Lobby HandleHost = {HandleHost} HandleJoin = {HandleJoin}/> }
         </>
     )

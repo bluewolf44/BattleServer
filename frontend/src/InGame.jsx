@@ -1,8 +1,8 @@
 import { useState } from 'react'
 import './InGame.css'
 
-function InGame({HandleBack,data,setData,host}) {
-    const [forceUpdate,setForceUpdate] = useState(-1) //To forceUpdate the page using in boardPlacement
+function InGame({HandleBack,data,setData,host,hasShot,setHasShot}) {
+    const [forceUpdate,setForceUpdate] = useState(-1); //To forceUpdate the page using in boardPlacement
     const boardSize = 7;
 
 
@@ -58,6 +58,12 @@ function InGame({HandleBack,data,setData,host}) {
 
     //Will only work on that client turn
     const setHit = (id) => {
+        if (hasShot)
+        {
+            return;
+        }
+        setHasShot(true);
+
         fetch('http://localhost:8080/setHit/'+data.lobbyCode, {
            method: 'POST',
            body: JSON.stringify({//Using hitUpdate in backend for object
@@ -71,12 +77,14 @@ function InGame({HandleBack,data,setData,host}) {
         .then((res) => {
             if (!res.ok) {
                 throw new Error('Failed upload board');
+                setHasShot(false);
             }
         })
         .catch((err) => {
             console.error(err);
             setError('Failed to load properties. Please try again later.');
             setIsLoading(false);
+            setHasShot(false);
         });
     };
 
@@ -100,8 +108,6 @@ function InGame({HandleBack,data,setData,host}) {
             })
             .catch((err) => {
                 console.error(err);
-                setError('Failed to load properties. Please try again later.');
-                setIsLoading(false);
             });
     }
 
