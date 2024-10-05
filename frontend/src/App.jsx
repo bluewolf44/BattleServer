@@ -35,7 +35,6 @@ function App() {
             if (temp.currentPhase == "waitingForHost" || temp.currentPhase == "waitingForGuest")
             {
                 temp.ships = shipBoard.current;
-                console.log(shipBoard.current);
             }
             setData(temp);
             console.log(temp);
@@ -70,7 +69,6 @@ function App() {
             if (temp.currentPhase == "waitingForHost" || temp.currentPhase == "waitingForGuest")
             {
                 temp.ships = shipBoard.current;
-                console.log(shipBoard.current);
             }
             setData(temp);
             console.log(temp);

@@ -184,7 +184,7 @@ class BattleServerApplication {
 					//Sleeping to give time to display where the hit landed
 					sleep(delayBetweenTurns)
 					//sending the updated board to both clients
-					gameSocket = GameSocket(game.lobbyCode,game.currentPhase,game.hostShips,game.guestHits)
+					gameSocket = GameSocket(game.lobbyCode,game.currentPhase,game.guestShips,game.hostHits)
 					game.hostEmitter.send(gameSocket)
 					game.questEmitter!!.send(gameSocket)
 				}
