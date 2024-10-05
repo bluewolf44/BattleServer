@@ -43,7 +43,7 @@ export default function SignUp({setError}){
             {
                 setError("Username already exists");
             }
-            else
+            else if (response.status == 201)
             {
                 setError("Account created");
             }
