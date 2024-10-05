@@ -1,11 +1,11 @@
 package com.battleServer
 
-import com.battleServer.PlayerService
 import com.battleServer.domains.Player
 import com.battleServer.domains.BoardUpdate
 import com.battleServer.domains.Game
 import com.battleServer.domains.GameSocket
 import com.battleServer.domains.hitUpdate
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 import org.springframework.http.HttpStatus
@@ -27,10 +27,10 @@ const val boardSize = 7 //x&y
 @RestController
 @SpringBootApplication
 @CrossOrigin(origins = ["http://localhost:5173"])
-class BattleServerApplication(val service: PlayerService) {
+class BattleServerApplication(@Autowired val playerService: PlayerService) {
 
 	@GetMapping("/db")
-	fun index(): List<Player> = service.findPlayers()
+	fun index(): List<Player> = playerService.findPlayers()
 
 	@GetMapping("")
 	fun helloWorld(): String = "Hello World"
@@ -198,6 +198,15 @@ class BattleServerApplication(val service: PlayerService) {
 		}
 		return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Lobby not found")
 	}
+
+	@PostMapping("createPlayer")
+	fun test(@RequestBody player: Player) : String
+	{
+		playerService.save(player)
+
+		return "worked"
+	}
+
 }
 
 //only if all ships have been hit.

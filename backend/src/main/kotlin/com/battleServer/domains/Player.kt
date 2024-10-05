@@ -1,7 +1,12 @@
 package com.battleServer.domains
 
+import org.springframework.data.annotation.Id
+import org.springframework.data.relational.core.mapping.Table
+
+@Table("player")
 data class Player(
-    val playerId:Int,
+    @Id
+    var playerId:Int?,
     val userName:String,
     val password:String,
     val currentWinStreak:Int,
