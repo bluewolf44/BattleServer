@@ -61,11 +61,15 @@ export default function Account({setError,idToLambda,user,setUser}){
                 console.error(error.message);
             }
         } else {
-            await fetch(`https://${idToLambda}/logIn`+"?username="+username, {
+            await fetch(`https://${idToLambda}/logIn`, {
                 method: "GET",
                 headers: {
                     'Content-Type': 'application/json',
                 },
+                body: JSON.stringify({
+                    username: username,
+                    password: password
+                })
             }).then((res) => {
                 if (res.status == 404)
                 {
