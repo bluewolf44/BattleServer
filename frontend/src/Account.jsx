@@ -62,7 +62,7 @@ export default function Account({setError,idToLambda,user,setUser}){
             }
         } else {
             await fetch(`https://${idToLambda}/logIn`, {
-                method: "GET",
+                method: "POST",
                 headers: {
                     'Content-Type': 'application/json',
                 },
