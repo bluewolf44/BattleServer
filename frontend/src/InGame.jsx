@@ -319,7 +319,7 @@ function InGame({HandleBack,data,setData,host,hasShot,setHasShot,currentPlacemen
                             </div>
                             <p>{currentPlacement.currentShip < ships.length ? "Size: " + ships[currentPlacement.currentShip] + ", Rotation: " + (currentPlacement.rotation ? "horizontal" : "vertical") : "All ships Placed"}</p>
 
-                            <button onClick = {HandlePlacement}>Confirm placement</button>
+                            {currentPlacement.currentShip < ships.length ? <p/> : <button onClick = {HandlePlacement}>Confirm placement</button>}
                         </>
                     :<p/>}
                 </>) : (<h2> Loading </h2>)
