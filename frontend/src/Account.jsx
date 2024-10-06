@@ -35,7 +35,7 @@ export default function Account({setError,idToLambda,user,setUser}){
         if(signUp)
         {
             try{
-                const response = await fetch(`http://${idToLambda}/signUp`, {
+                const response = await fetch(`https://${idToLambda}/signUp`, {
                     method: "POST",
                     headers: {
                         'Content-Type': 'application/json',
@@ -61,7 +61,7 @@ export default function Account({setError,idToLambda,user,setUser}){
                 console.error(error.message);
             }
         } else {
-            await fetch(`http://${idToLambda}/logIn`, {
+            await fetch(`https://${idToLambda}/logIn`, {
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json',

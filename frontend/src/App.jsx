@@ -18,7 +18,7 @@ function App() {
     //The current Ship being placed
     const [currentPlacement,setCurrentPlacement] = useState({});
     const idToBackEnd = "localhost"
-    const idToLambda = "https://ijp5zajf4d.execute-api.us-east-1.amazonaws.com/prod"
+    const idToLambda = "ijp5zajf4d.execute-api.us-east-1.amazonaws.com/prod"
     const [user, setUser] = useState(null)
 
 
@@ -72,7 +72,7 @@ function App() {
     }
 
     const increaseWinStreak = async () => {
-        await fetch(`http://${idToLambda}/winStreak`, {
+        await fetch(`https://${idToLambda}/winStreak`, {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json',
