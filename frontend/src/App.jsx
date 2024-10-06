@@ -72,6 +72,11 @@ function App() {
     }
 
     const increaseWinStreak = async () => {
+        if (user == null)
+        {
+            return
+        }
+
         await fetch(`https://${idToLambda}/winStreak`, {
             method: "POST",
             headers: {
