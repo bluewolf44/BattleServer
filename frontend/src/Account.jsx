@@ -61,21 +61,18 @@ export default function Account({setError,idToLambda,user,setUser}){
                 console.error(error.message);
             }
         } else {
-            await fetch(`https://${idToLambda}/logIn`, {
-                method: "POST",
+            await fetch(`https://${idToLambda}/logIn`+"?username="+username, {
+                method: "GET",
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({
-                    username: username,
-                    password: password,
-                    currentWinStreak: 0,
-                    highestWinStreak: 0
-                })
             }).then((res) => {
                 if (res.status == 404)
                 {
                     setError("Username or Password incorrect");
+                }
+                else if (res.status == 400){
+                    setError("Bad request");
                 }
                 else if (res.status == 200)
                 {
