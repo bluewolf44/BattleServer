@@ -17,8 +17,9 @@ function App() {
     const [hasShot,setHasShot] = useState(false);
     //The current Ship being placed
     const [currentPlacement,setCurrentPlacement] = useState({});
-    const idToBackEnd = "35.174.65.31"
-    const idToLambda = "localhost"
+    const idToBackEnd = "localhost"
+    const idToLambda = "localhost:8080"
+    const [user, setUser] = useState(null)
 
 
     let shipBoard = useRef();
@@ -41,13 +42,15 @@ function App() {
 
         eventSource.onmessage = (event) => {
             const temp = JSON.parse(event.data);
-            if (temp.currentPhase == "waitingForHost" || temp.currentPhase == "waitingForGuest")
-            {
+            if (temp.currentPhase == "waitingForHost" || temp.currentPhase == "waitingForGuest") {
                 temp.ships = shipBoard.current;
-            }
-            if(temp.currentPhase == "guestTurn")
-            {
+            } else if(temp.currentPhase == "guestTurn") {
                 setHasShot(false);
+            } else if (temp.currentPhase == "hostWin") {
+              eventSource.close();
+              increaseWinStreak();
+            } else if (temp.currentPhase == "guestWin") {
+              eventSource.close();
             }
 
             setData(temp);
@@ -68,6 +71,25 @@ function App() {
 
     }
 
+    const increaseWinStreak = async () => {
+        await fetch(`http://${idToLambda}/winStreak`, {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                username: user.username,
+            })
+        }).then((res) => {
+            if (!res.ok) {
+                throw new Error('Failed upload board');
+            }
+        }).catch((err) => {
+            console.error(err);
+            setError('Failed to load properties. Please try again later.');
+        });
+    };
+
     const HandleJoin = async (lobbyCode) => {
         //Creating the sse link using this EventSource
         const eventSource = new EventSource(`http://${idToBackEnd}:8080/joinGame/`+lobbyCode);
@@ -81,14 +103,15 @@ function App() {
 
         eventSource.onmessage = (event) => {
             const temp = JSON.parse(event.data);
-            if (temp.currentPhase == "waitingForHost" || temp.currentPhase == "waitingForGuest")
-            {
+            if (temp.currentPhase == "waitingForHost" || temp.currentPhase == "waitingForGuest") {
                 temp.ships = shipBoard.current;
-            }
-
-            if(temp.currentPhase == "hostTurn")
-            {
+            } else if (temp.currentPhase == "hostTurn") {
                 setHasShot(false);
+            } else if (temp.currentPhase == "hostWin") {
+                eventSource.close();
+            } else if (temp.currentPhase == "guestWin") {
+                eventSource.close();
+                increaseWinStreak();
             }
 
             setData(temp);
@@ -128,7 +151,7 @@ function App() {
                     idToBackEnd = {idToBackEnd}
                 />:
                 <Lobby HandleHost = {HandleHost} HandleJoin = {HandleJoin}/> }
-                <Account setError={setError} idToLambda={idToLambda}/>
+                <Account setError={setError} idToLambda={idToLambda} user={user} setUser={setUser}/>
                 <p>{error}</p>
         </>
     )

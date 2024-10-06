@@ -1,10 +1,6 @@
 package com.battleServer
 
-import com.battleServer.domains.Player
-import com.battleServer.domains.BoardUpdate
-import com.battleServer.domains.Game
-import com.battleServer.domains.GameSocket
-import com.battleServer.domains.hitUpdate
+import com.battleServer.domains.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
@@ -43,6 +39,18 @@ class BattleServerApplication(@Autowired val playerService: PlayerService) {
 	fun logIn(@RequestBody data: Player): ResponseEntity<Player> {
 		val player = playerService.findPlayer(data.username,data.password) //getting player from database
 			?: return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null) //If player is null
+		return ResponseEntity.status(HttpStatus.OK).body(player)
+	}
+
+	@PostMapping("/winStreak")
+	fun winStreak(@RequestBody data: Username):ResponseEntity<Player>
+	{
+		if(!playerService.updateCurrentWinSteak(data.username))
+		{
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null)
+		}
+		val player = playerService.getByUserName(data.username) //getting player from database
+
 		return ResponseEntity.status(HttpStatus.OK).body(player)
 	}
 

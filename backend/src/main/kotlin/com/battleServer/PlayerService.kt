@@ -26,6 +26,19 @@ class PlayerService(val db: PlayerRepository){
 
     fun findPlayer(userName: String,password:String): Player? = db.getByUserNameAndPassword(userName,password)
 
+    fun getByUserName(username: String) : Player? = db.getByUserName(username)
+
+    fun updateCurrentWinSteak(username: String):Boolean
+    {
+        val player = db.getByUserName(username) ?: return false
+        db.updateCurrentWinSteak(username, player.currentWinStreak)
+        if (player.currentWinStreak >= player.highestWinStreak)
+        {
+            db.updateHighestWinSteak(username, player.currentWinStreak)
+        }
+        return true
+    }
+
 }
 
 interface PlayerRepository : CrudRepository<Player, Int>
@@ -38,4 +51,10 @@ interface PlayerRepository : CrudRepository<Player, Int>
 
     @Query("select * from player where username = :username and password = :password")
     fun getByUserNameAndPassword(@Param("username") username: String,@Param("password") password: String): Player?
+
+    @Query("Update player set current_win_streak = :winSteak where username = :username")
+    fun updateCurrentWinSteak(@Param("username") username: String,@Param("winSteak") winSteak: Int)
+
+    @Query("Update player set highest_win_streak = :winSteak where username = :username")
+    fun updateHighestWinSteak(@Param("username") username: String,@Param("winSteak") winSteak: Int)
 }

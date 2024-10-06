@@ -1,11 +1,10 @@
 import { useState } from 'react'
 
-export default function Account({setError,idToLambda}){
+export default function Account({setError,idToLambda,user,setUser}){
     const [accountForm, setAccountForm] = useState(true);
     const [signUp, setSignUp] = useState(true); // true if signUp, False if login
     const [username, setUsername] = useState("");
     const [password, setpassword] = useState("");
-    const [user, setUser] = useState(null)
 
     const HandleSignUp = async () => {
         if(signUp)
@@ -36,7 +35,7 @@ export default function Account({setError,idToLambda}){
         if(signUp)
         {
             try{
-                const response = await fetch(`http://${idToLambda}:8080/signUp`, {
+                const response = await fetch(`http://${idToLambda}/signUp`, {
                     method: "POST",
                     headers: {
                         'Content-Type': 'application/json',
@@ -62,7 +61,7 @@ export default function Account({setError,idToLambda}){
                 console.error(error.message);
             }
         } else {
-            await fetch(`http://${idToLambda}:8080/login`, {
+            await fetch(`http://${idToLambda}/login`, {
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json',
