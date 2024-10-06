@@ -17,7 +17,7 @@ function App() {
     const [hasShot,setHasShot] = useState(false);
     //The current Ship being placed
     const [currentPlacement,setCurrentPlacement] = useState({});
-    const idToBackEnd = "localhost"
+    const idToBackEnd = "35.174.65.31"
     const idToLambda = "ijp5zajf4d.execute-api.us-east-1.amazonaws.com/prod"
     const [user, setUser] = useState(null)
 
