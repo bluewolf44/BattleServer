@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import './InGame.css'
 
-function InGame({HandleBack,data,setData,host,hasShot,setHasShot,currentPlacement,setCurrentPlacement}) {
+function InGame({HandleBack,data,setData,host,hasShot,setHasShot,currentPlacement,setCurrentPlacement,idToBackEnd}) {
     const [forceUpdate,setForceUpdate] = useState(-1); //To forceUpdate the page using in boardPlacement
     const [placementHistory,setPlacementHistory] = useState([])//The placement History;
     const boardSize = 7;
@@ -145,7 +145,7 @@ function InGame({HandleBack,data,setData,host,hasShot,setHasShot,currentPlacemen
         }
         setHasShot(true);
 
-        fetch('http://localhost:8080/setHit/'+data.lobbyCode, {
+        fetch(`http://${idToBackEnd}:8080/setHit/`+data.lobbyCode, {
            method: 'POST',
            body: JSON.stringify({//Using hitUpdate in backend for object
                id:id,
@@ -172,7 +172,7 @@ function InGame({HandleBack,data,setData,host,hasShot,setHasShot,currentPlacemen
     //Run on acceptance of placement
     const HandlePlacement = () =>
     {
-        fetch('http://localhost:8080/updateBoard/'+data.lobbyCode, {
+        fetch(`http://${idToBackEnd}:8080/updateBoard/`+data.lobbyCode, {
                method: 'POST',
                body: JSON.stringify({// using BoardUpdate in backend for object
                    board:data.ships,

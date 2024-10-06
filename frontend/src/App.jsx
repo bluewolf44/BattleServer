@@ -17,6 +17,7 @@ function App() {
     const [hasShot,setHasShot] = useState(false);
     //The current Ship being placed
     const [currentPlacement,setCurrentPlacement] = useState({});
+    const idToBackEnd = "35.174.65.31"
 
 
     let shipBoard = useRef();
@@ -28,7 +29,7 @@ function App() {
 
     const HandleHost = async () => {
         //Creating the sse link using this EventSource
-        const eventSource = new EventSource('http://localhost:8080/createGame');
+        const eventSource = new EventSource(`http://${idToBackEnd}:8080/createGame`);
 
         eventSource.onopen = async (event) => {
             console.log("connection opened");
@@ -68,7 +69,7 @@ function App() {
 
     const HandleJoin = async (lobbyCode) => {
         //Creating the sse link using this EventSource
-        const eventSource = new EventSource('http://localhost:8080/joinGame/'+lobbyCode);
+        const eventSource = new EventSource(`http://${idToBackEnd}:8080/joinGame/`+lobbyCode);
 
         eventSource.onopen = (event) => {
             console.log("connection opened");
@@ -123,6 +124,7 @@ function App() {
                     setHasShot = {setHasShot}
                     currentPlacement = {currentPlacement}
                     setCurrentPlacement = {setCurrentPlacement}
+                    idToBackEnd = {idToBackEnd}
                 />:
                 <Lobby HandleHost = {HandleHost} HandleJoin = {HandleJoin}/> }
                 <SignUp setError={setError} />
