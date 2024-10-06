@@ -1,7 +1,6 @@
 package com.battleServer
 
 import com.battleServer.domains.*
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 import org.springframework.http.HttpStatus
@@ -22,40 +21,8 @@ const val boardSize = 7 //x&y
 
 @RestController
 @SpringBootApplication
-@CrossOrigin(origins = ["http://localhost:5173"])
-class BattleServerApplication(@Autowired val playerService: PlayerService) {
-
-	@PostMapping("/signUp")
-	fun signUp(@RequestBody data: Player): ResponseEntity<String> {
-		if(playerService.checkPlayerUserName(data.username))
-		{
-			return ResponseEntity.status(HttpStatus.CONFLICT).body("a test");
-		}
-		playerService.save(data);
-		return ResponseEntity.status(HttpStatus.CREATED).body("a test");
-	}
-
-	@PostMapping("/login")
-	fun logIn(@RequestBody data: Player): ResponseEntity<Player> {
-		val player = playerService.findPlayer(data.username,data.password) //getting player from database
-			?: return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null) //If player is null
-		return ResponseEntity.status(HttpStatus.OK).body(player)
-	}
-
-	@PostMapping("/winStreak")
-	fun winStreak(@RequestBody data: Username):ResponseEntity<Player>
-	{
-		if(!playerService.updateCurrentWinSteak(data.username))
-		{
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null)
-		}
-		val player = playerService.getByUserName(data.username) //getting player from database
-
-		return ResponseEntity.status(HttpStatus.OK).body(player)
-	}
-
-	@GetMapping("/db")
-	fun index(): List<Player> = playerService.findPlayers()
+@CrossOrigin
+class BattleServerApplication() {
 
 	@GetMapping("")
 	fun helloWorld(): String = "Hello World"
