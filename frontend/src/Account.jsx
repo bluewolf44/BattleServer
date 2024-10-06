@@ -61,7 +61,7 @@ export default function Account({setError,idToLambda,user,setUser}){
                 console.error(error.message);
             }
         } else {
-            await fetch(`http://${idToLambda}/login`, {
+            await fetch(`http://${idToLambda}/logIn`, {
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json',

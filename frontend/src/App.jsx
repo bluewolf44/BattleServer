@@ -18,7 +18,7 @@ function App() {
     //The current Ship being placed
     const [currentPlacement,setCurrentPlacement] = useState({});
     const idToBackEnd = "localhost"
-    const idToLambda = "localhost:8080"
+    const idToLambda = "https://ijp5zajf4d.execute-api.us-east-1.amazonaws.com/prod"
     const [user, setUser] = useState(null)
 
 
