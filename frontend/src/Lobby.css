@@ -21,6 +21,13 @@
     right: 10px;
 }
 
+#PlayerDiv {
+    display: absolute;
+    position: fixed;
+    top: 10px;
+    right: 10px;
+}
+
 #JoinButton {
     margin-top: 10px;
 }

@@ -19,9 +19,9 @@ class PlayerService(val db: PlayerRepository){
     fun findPlayers(): List<Player> = db.findPlayers()
 
     //true if found
-    fun checkPlayerUserName(userName:String): Boolean
+    fun checkPlayerUserName(username:String): Boolean
     {
-        return db.getByUserName(userName) != null
+        return db.getByUserName(username) != null
     }
 
     fun findPlayer(userName: String,password:String): Player? = db.getByUserNameAndPassword(userName,password)
@@ -33,9 +33,9 @@ interface PlayerRepository : CrudRepository<Player, Int>
     @Query("select * from player")
     fun findPlayers(): List<Player>
 
-    @Query("select * from player where user_name = :userName")
-    fun getByUserName(@Param("userName") userName: String): Player?
+    @Query("select * from player where username = :username")
+    fun getByUserName(@Param("username") username: String): Player?
 
-    @Query("select * from player where user_name = :userName and password = :password")
-    fun getByUserNameAndPassword(@Param("userName") userName: String,@Param("password") password: String): Player?
+    @Query("select * from player where username = :username and password = :password")
+    fun getByUserNameAndPassword(@Param("username") username: String,@Param("password") password: String): Player?
 }

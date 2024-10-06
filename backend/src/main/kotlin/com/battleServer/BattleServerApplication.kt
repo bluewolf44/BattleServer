@@ -31,7 +31,7 @@ class BattleServerApplication(@Autowired val playerService: PlayerService) {
 
 	@PostMapping("/signUp")
 	fun signUp(@RequestBody data: Player): ResponseEntity<String> {
-		if(playerService.checkPlayerUserName(data.userName))
+		if(playerService.checkPlayerUserName(data.username))
 		{
 			return ResponseEntity.status(HttpStatus.CONFLICT).body("a test");
 		}
@@ -41,7 +41,7 @@ class BattleServerApplication(@Autowired val playerService: PlayerService) {
 
 	@PostMapping("/login")
 	fun logIn(@RequestBody data: Player): ResponseEntity<Player> {
-		val player = playerService.findPlayer(data.userName,data.password) //getting player from database
+		val player = playerService.findPlayer(data.username,data.password) //getting player from database
 			?: return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null) //If player is null
 		return ResponseEntity.status(HttpStatus.OK).body(player)
 	}

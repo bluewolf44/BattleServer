@@ -7,7 +7,7 @@ import org.springframework.data.relational.core.mapping.Table
 data class Player(
     @Id
     var playerId:Int?,
-    val userName:String,
+    val username:String,
     val password:String,
     val currentWinStreak:Int,
     val highestWinStreak:Int
