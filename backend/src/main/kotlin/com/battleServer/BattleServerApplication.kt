@@ -39,6 +39,13 @@ class BattleServerApplication(@Autowired val playerService: PlayerService) {
 		return ResponseEntity.status(HttpStatus.CREATED).body("a test");
 	}
 
+	@PostMapping("/login")
+	fun logIn(@RequestBody data: Player): ResponseEntity<Player> {
+		val player = playerService.findPlayer(data.userName,data.password) //getting player from database
+			?: return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null) //If player is null
+		return ResponseEntity.status(HttpStatus.OK).body(player)
+	}
+
 	@GetMapping("/db")
 	fun index(): List<Player> = playerService.findPlayers()
 

@@ -1,7 +1,7 @@
 import { useState,useRef,useEffect } from 'react'
 import InGame from './InGame'
 import Lobby from './Lobby'
-import SignUp from './SignUp'
+import Account from './Account'
 import './App.css'
 
 function App() {
@@ -18,6 +18,7 @@ function App() {
     //The current Ship being placed
     const [currentPlacement,setCurrentPlacement] = useState({});
     const idToBackEnd = "35.174.65.31"
+    const idToLambda = "localhost"
 
 
     let shipBoard = useRef();
@@ -127,7 +128,7 @@ function App() {
                     idToBackEnd = {idToBackEnd}
                 />:
                 <Lobby HandleHost = {HandleHost} HandleJoin = {HandleJoin}/> }
-                <SignUp setError={setError} />
+                <Account setError={setError} idToLambda={idToLambda}/>
                 <p>{error}</p>
         </>
     )
