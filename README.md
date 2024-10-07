@@ -25,3 +25,21 @@ Frontend:
 - /logIn triggers the *log-in* Lambda function
 - /winStreak triggers the *update-win-streak* Lambda function
 
+## To Launch to LocalHost
+#### Frontend:
+```
+cd .\frontend\
+npm i
+npm run dev
+```
+React will be on port 5173
+
+You will have to change the Ip location in App.jsx to your backend IP.
+
+#### Backend:
+```
+cd .\backend\.
+.\gradlew BootRun
+```
+
+SpringBoot will run on port 8080
