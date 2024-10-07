@@ -10,6 +10,7 @@ Backend:
 
 Frontend:
 - Created with [Vite](https://vite.dev/), [React.js](https://reactjs.org), [npm](https://www.npmjs.com/)
+- Sends requests regarding player accounts (sign up, log in, update winstreak) and provides the interface to play the game and join lobbies. Sends data to the backend for it to be processed.
 
 ### AWS services
 - There are two **EC2 instances**, one for the frontend, one for the backend (with an *Elastic IP* to allow frontend to connect over its public IP)
