@@ -50,7 +50,7 @@ SpringBoot will run on port **8080**
 
 ## To replicate the AWS environment
 ### Frontend
-- Create an EC2 instance, using the t2.micro (free tier eligible) image.
+- Create an EC2 t2.micro instance, using the Amazon Linux image.
 - Allow all traffic from HTTP/HTTPS
 - Configure the inbound rules of the associated launch wizard to allow Custom TCP connections on port **3000** (this is the port the frontend runs on)
 - Connect to the instance
@@ -68,7 +68,7 @@ npm run dev
 ```
 
 ### Backend
-- Create an EC2 instance, using the t2.micro (free tier eligible) image.
+- Create an EC2 t2.micro instance, using the Amazon Linux image.
 - Allow all traffic from HTTP/HTTPS
 - Configure the inbound rules of the associated launch wizard to allow Custom TCP connections on port **8080** (this is the port the frontend connects to)
 - Connect to the instance
