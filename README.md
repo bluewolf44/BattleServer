@@ -73,3 +73,11 @@ Alternatively, if the `.jar` file is not up to date, you can also run the backen
 - Run `sudo ./gradlew bootRun`
 
 Please note that this method may take a while to boot and/or max out the CPU.
+
+Lambda functions:
+- Create a new Lambda function, 'Author from scratch'
+- Select Python as the runtime
+- Paste the code from one of the `aws-lambda` files in this repo
+- Repeat for all the functions
+
+
