@@ -83,7 +83,7 @@ export default function Account({setError,idToLambda,user,setUser}){
                     setError("Sign In success");
                 }
                 console.log(res);
-                return res.json().body;
+                return res.json();
             }).then((data) => {
                 console.log(data)
                 setUser(data);
