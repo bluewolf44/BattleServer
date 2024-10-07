@@ -154,10 +154,11 @@ function App() {
                     currentPlacement = {currentPlacement}
                     setCurrentPlacement = {setCurrentPlacement}
                     idToBackEnd = {idToBackEnd}
-                />:
-                <Lobby HandleHost = {HandleHost} HandleJoin = {HandleJoin}/> }
-                <Account setError={setError} idToLambda={idToLambda} user={user} setUser={setUser}/>
-                <p>{error}</p>
+                />: <>
+                    <Lobby HandleHost = {HandleHost} HandleJoin = {HandleJoin}/>
+                    <Account setError={setError} idToLambda={idToLambda} user={user} setUser={setUser}/>
+                    <p>{error}</p>
+                </>}
         </>
     )
 }
