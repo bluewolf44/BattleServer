@@ -36,7 +36,7 @@ cd .\frontend\
 npm i
 npm run dev
 ```
-React will be on port 5173
+React will be on port **5173**
 
 You will have to change the Ip location in App.jsx to your backend IP.
 
@@ -46,10 +46,10 @@ cd .\backend\.
 .\gradlew BootRun
 ```
 
-SpringBoot will run on port 8080
+SpringBoot will run on port **8080**
 
 ## To replicate the AWS environment
-Frontend:
+### Frontend
 - Create an EC2 instance, using the t2.micro (free tier eligible) image.
 - Allow all traffic from HTTP/HTTPS
 - Configure the inbound rules of the associated launch wizard to allow Custom TCP connections on port **3000** (this is the port the frontend runs on)
@@ -60,7 +60,14 @@ Frontend:
 - Change directory into `BattleServer/frontend`
 - Run `npm run dev` to start the Vite server
 
-Backend:
+To automatically run the server on every boot, please edit the user data with the following: https://repost.aws/knowledge-center/execute-user-data-ec2 and change the shell commands to be:
+```
+#!/bin/sh
+cd /home/ec2-user/BattleServer/frontend
+npm run dev
+```
+
+### Backend
 - Create an EC2 instance, using the t2.micro (free tier eligible) image.
 - Allow all traffic from HTTP/HTTPS
 - Configure the inbound rules of the associated launch wizard to allow Custom TCP connections on port **8080** (this is the port the frontend connects to)
@@ -78,19 +85,26 @@ Alternatively, if the `.jar` file is not up to date, you can also run the backen
 
 Please note that this method may take a while to boot and/or max out the CPU.
 
-Lambda functions:
+To automatically run the server on every boot, please edit the user data with the following: https://repost.aws/knowledge-center/execute-user-data-ec2 and change the shell commands to be:
+```
+#!/bin/sh
+cd /home/ec2-user/BattleServer/backend/build/libs
+java -jar <snapshot>
+```
+
+## Lambda functions
 - Create a new Lambda function, 'Author from scratch'
 - Select Python as the runtime
 - Paste the code from one of the `aws-lambda` files in this repo
 - Repeat for all the functions
 
-S3 Bucket
+### S3 Bucket
 - Create a new 'General purpose' S3 Bucket named "player-storage". **NOTE**: If you use a different name, you will need to update the Lambda functions accordingly
 - **NOTE**: Make sure to untick 'Block all public access'
 - Leave the rest of the settings as default
 - Confirm bucket creation
 
-API Gateway
+### API Gateway
 - Click 'Create API' in the AWS API Gateway dashboard
 - Select REST API
 - Click 'Create Resource'
