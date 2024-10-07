@@ -3,8 +3,6 @@ This project is an online multiplayer battleship game. Players can play without 
 
 This application is intended to run in the AWS Cloud.
 
-[Video](https://www.youtube.com/watch?v=RJgcW6hG9A8)
-
 ## Project design
 Backend: 
 - Created with [SpringBoot](https://spring.io/projects/spring-boot), [gradle](https://gradle.org/), [Kotlin](https://kotlinlang.org)
