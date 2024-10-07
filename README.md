@@ -13,7 +13,7 @@ Frontend:
 - Sends requests regarding player accounts (sign up, log in, update winstreak) and provides the interface to play the game and join lobbies. Sends data to the backend for it to be processed.
 
 ### AWS services
-- There are two **EC2 instances**, one for the frontend, one for the backend (with an *Elastic IP* to allow frontend to connect over its public IP)
+- There are two **EC2 instances**, one for the frontend, one for the backend (with *Elastic IPs* for both)
 - An **API Gateway** called BattleServer-API that allows the frontend to send requests to /signUp, /logIn, /winStreak
 - An **S3 Bucket** called player-storage to store the players' information
 - The following **Lambda functions** written in Python and using boto3:
