@@ -25,7 +25,11 @@ Frontend:
 - /logIn triggers the *log-in* Lambda function
 - /winStreak triggers the *update-win-streak* Lambda function
 
-## To Launch to LocalHost
+## To get access to the EC2-instances that this project is deployed on
+Please use the following AWS guide to generate a key-pair: [Create a key pair for your Amazon EC2 instance](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/create-key-pairs.html)
+
+Make sure that the private key has the `.pem` extension. Please send the public key to one of the other developers working on this project. **NOTE**: Do **NOT** send the private (the file with the `.pem` extension) as sending it over the network is not secure.
+## To launch to LocalHost
 #### Frontend:
 ```
 cd .\frontend\
