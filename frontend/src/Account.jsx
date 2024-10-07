@@ -51,7 +51,7 @@ export default function Account({setError,idToLambda,user,setUser}){
                 {
                     setError("Username already exists");
                 }
-                else if (response.status == 201)
+                else if (response.status == 200)
                 {
                     setError("Account created");
                 }
