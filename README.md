@@ -80,4 +80,8 @@ Lambda functions:
 - Paste the code from one of the `aws-lambda` files in this repo
 - Repeat for all the functions
 
-
+S3 Bucket
+- Create a new 'General purpose' S3 Bucket named "player-storage". **NOTE**: If you use a different name, you will need to update the Lambda functions accordingly
+- **NOTE**: Make sure to untick 'Block all public access'
+- Leave the rest of the settings as default
+- Confirm bucket creation
