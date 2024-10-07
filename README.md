@@ -92,7 +92,7 @@ cd /home/ec2-user/BattleServer/backend/build/libs
 java -jar <snapshot>
 ```
 
-## Lambda functions
+### Lambda functions
 - Create a new Lambda function, 'Author from scratch'
 - Select Python as the runtime
 - Paste the code from one of the `aws-lambda` files in this repo
