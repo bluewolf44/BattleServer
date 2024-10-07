@@ -43,3 +43,33 @@ cd .\backend\.
 ```
 
 SpringBoot will run on port 8080
+
+## To replicate the AWS environment
+Frontend:
+- Create an EC2 instance, using the t2.micro (free tier eligible) image.
+- Allow all traffic from HTTP/HTTPS
+- Configure the inbound rules of the associated launch wizard to allow Custom TCP connections on port **3000** (this is the port the frontend runs on)
+- Connect to the instance
+- Run `sudo yum install git`
+- Run `sudo yum install npm`
+- Run `git clone <battleServerRepo>`
+- Change directory into `BattleServer/frontend`
+- Run `npm run dev` to start the Vite server
+
+Backend:
+- Create an EC2 instance, using the t2.micro (free tier eligible) image.
+- Allow all traffic from HTTP/HTTPS
+- Configure the inbound rules of the associated launch wizard to allow Custom TCP connections on port **8080** (this is the port the frontend connects to)
+- Connect to the instance
+- Run `sudo yum install git`
+- Run `sudo yum install java-21-amazon-corretto-devel`
+- Run `git clone <battleServerRepo>`
+- Change directory into `BattleServer/backend/build/libs` (this is where the snapshot `.jar` file is)
+- Run `sudo java -jar <snapshot>`
+
+Alternatively, if the `.jar` file is not up to date, you can also run the backend by doing the following
+- From the home directory, change directory to BattleServer/backend
+- Run `sudo chmod 755 gradlew`
+- Run `sudo ./gradlew bootRun`
+
+Please note that this method may take a while to boot and/or max out the CPU.
