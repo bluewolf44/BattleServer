@@ -36,7 +36,7 @@ cd .\frontend\
 npm i
 npm run dev
 ```
-React will be on port **5173**
+React will be on port **3000**
 
 You will have to change the Ip location in App.jsx to your backend IP.
 
