@@ -85,3 +85,16 @@ S3 Bucket
 - **NOTE**: Make sure to untick 'Block all public access'
 - Leave the rest of the settings as default
 - Confirm bucket creation
+
+API Gateway
+- Click 'Create API' in the AWS API Gateway dashboard
+- Select REST API
+- Click 'Create Resource'
+- Enter **one** of the following: /signUp, /logIn, /winStreak under the 'Resource name' field
+- Enable CORS and create the resource
+- Select the endpoint, and click 'Create method'
+- Select 'Method type' POST and 'Integration type' Lambda
+- Select the Lambda instance from the drop-down that corresponds to the endpoint
+- Create the method
+- Check under 'Integration response' that the Access-Control-Allow-Origin is there, if not, create it.
+- Test the method to ensure it is calling the Lambda function correctly
