@@ -7,11 +7,11 @@ This application is intended to run in the AWS Cloud.
 
 ## Project design
 Backend: 
-- Created with SpringBoot, gradle, Kotlin
+- Created with [SpringBoot](https://spring.io/projects/spring-boot), [gradle](https://gradle.org/), [Kotlin](https://kotlinlang.org)
 - Deals with the game and lobby logic (**NOTE**: *DOES NOT* have a connection to any database)
 
 Frontend:
-- Created with Vite, React, npm
+- Created with [Vite](https://vite.dev/), [React.js](https://reactjs.org), [npm](https://www.npmjs.com/)
 
 ### AWS services
 - There are two **EC2 instances**, one for the frontend, one for the backend (with an *Elastic IP* to allow frontend to connect over its public IP)
