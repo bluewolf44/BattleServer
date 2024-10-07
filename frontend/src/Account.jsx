@@ -83,10 +83,10 @@ export default function Account({setError,idToLambda,user,setUser}){
                     setError("Sign In success");
                 }
                 console.log(res);
-                return JSON.parse(res.json().body);
+                return res.json();
             }).then((data) => {
-                console.log(data)
-                setUser(data);
+                console.log(JSON.parse(data.body))
+                setUser(JSON.parse(data.body));
             }).catch((err) => {
                 console.error(err);
                 setError('Failed to load properties. Please try again later.');
